@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>数据特征需求清单 · 特征出域模板 · 鑫安 × 一汽</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;900&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --red:#ED1C24; --red-soft:#FDE9EA;
+    --ink:#16202B; --ink2:#56636F; --ink3:#909AA6;
+    --bg:#EEF1F4; --line:#E4E8EE; --dark:#11161B;
+    --teal:#00778B; --green:#00AF66; --amber:#E1A300; --orange:#FF8200; --blue:#2A6FDB;
+    --p1:var(--red); --p2:#FF8200; --p3:#00778B;
+    --mono:"IBM Plex Mono",monospace;
+  }
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  body{ font-family:"Noto Sans SC","PingFang SC","Microsoft YaHei",sans-serif; background:var(--bg); color:var(--ink); }
+  .wrap{ max-width:1560px; margin:0 auto; padding:0 40px 64px; }
+
+  .hero{ background:var(--dark); color:#fff; }
+  .hero-in{ max-width:1560px; margin:0 auto; padding:46px 40px 38px; }
+  .hero-top{ display:flex; gap:48px; align-items:flex-end; justify-content:space-between; }
+  .kicker{ display:flex; align-items:center; gap:16px; }
+  .kicker .bar{ width:9px; height:42px; background:var(--red); border-radius:3px; }
+  .kicker .t1{ font-size:21px; font-weight:900; letter-spacing:.06em; }
+  .kicker .t2{ font-size:13px; font-weight:600; color:#8C98A4; letter-spacing:.2em; margin-top:3px; }
+  .hero h1{ font-size:42px; font-weight:900; line-height:1.28; margin-top:22px; }
+  .hero h1 em{ font-style:normal; color:var(--red); }
+  .hero .sub{ font-size:16.5px; color:#AEB8C2; margin-top:14px; line-height:1.7; max-width:880px; }
+  .hero .sub b{ color:#fff; }
+  .hero-side{ flex:0 0 320px; text-align:right; }
+  .hero-side .item{ margin-bottom:14px; }
+  .hero-side .v{ font-size:30px; font-weight:900; color:#fff; }
+  .hero-side .v em{ font-style:normal; color:var(--red); }
+  .hero-side .l{ font-size:13px; color:#8C98A4; margin-top:2px; }
+
+  /* contract strip */
+  .pact{ margin-top:26px; display:grid; grid-template-columns:auto 1fr 1fr 1fr auto; gap:16px; align-items:stretch; }
+  .pact .pt{ display:flex; flex-direction:column; justify-content:center; font-size:15px; font-weight:900; line-height:1.5; padding-right:6px; }
+  .pact .pt small{ font-size:12px; font-weight:600; color:#8C98A4; margin-top:4px; }
+  .form{ background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.13); border-radius:13px; padding:14px 18px; }
+  .form .fk{ font-size:11.5px; font-weight:800; letter-spacing:.1em; color:var(--red); }
+  .form b{ display:block; font-size:15px; margin-top:4px; }
+  .form span{ display:block; font-size:12.5px; color:#AEB8C2; line-height:1.55; margin-top:4px; }
+  .pact .no{ background:rgba(237,28,36,.1); border:1.5px dashed rgba(237,28,36,.5); border-radius:13px; padding:14px 18px; display:flex; flex-direction:column; justify-content:center; max-width:300px; }
+  .pact .no b{ font-size:14px; color:#FF8B8F; }
+  .pact .no span{ font-size:12px; color:#AEB8C2; line-height:1.55; margin-top:4px; }
+
+  h2{ font-size:24px; font-weight:900; margin:42px 0 6px; scroll-margin-top:20px; }
+  .h2sub{ font-size:14.5px; color:var(--ink3); margin-bottom:18px; }
+  .card{ background:#fff; border:1px solid var(--line); border-radius:18px; box-shadow:0 1px 2px rgba(20,30,45,.05); }
+
+  /* template legend */
+  .leg{ padding:22px 28px; display:grid; grid-template-columns:repeat(7, 1fr); gap:0; }
+  .leg .lc{ padding:0 18px; border-left:1px solid var(--line); }
+  .leg .lc:first-child{ border-left:none; padding-left:0; }
+  .leg b{ display:block; font-size:14px; font-weight:900; }
+  .leg span{ display:block; font-size:12px; color:var(--ink2); line-height:1.55; margin-top:5px; }
+
+  /* domain section */
+  .dom{ margin-top:26px; overflow-x:auto; }
+  .dom-head{ display:flex; align-items:center; gap:18px; padding:18px 26px; border-bottom:1px solid var(--line); background:color-mix(in srgb, var(--pc) 5%, #fff); min-width:1240px; }
+  .dom-head .ptag{ flex:0 0 auto; font-size:12px; font-weight:800; letter-spacing:.1em; color:#fff; background:var(--pc); border-radius:7px; padding:5px 13px; white-space:nowrap; }
+  .dom-head b{ font-size:19px; font-weight:900; }
+  .dom-head .ds{ font-size:13px; color:var(--ink2); margin-top:2px; }
+  .dom-head .mods{ margin-left:auto; font-size:12.5px; color:var(--ink2); text-align:right; line-height:1.5; }
+  .dom-head .mods b{ font-size:12.5px; color:var(--pc); }
+  table{ border-collapse:collapse; width:100%; min-width:1240px; table-layout:fixed; }
+  th, td{ border-top:1px solid var(--line); padding:11px 14px; vertical-align:top; text-align:left; }
+  thead th{ border-top:none; background:#F8FAFC; font-size:12px; font-weight:800; letter-spacing:.05em; color:var(--ink2); padding:10px 14px; }
+  tbody tr:hover{ background:#FAFBFC; }
+  col.c-feat{ width:218px; } col.c-desc{ width:320px; } col.c-cal{ width:218px; }
+  col.c-freq{ width:96px; } col.c-form{ width:104px; } col.c-use{ width:170px; } col.c-need{ width:96px; }
+  .fcode{ font-family:var(--mono); font-size:11px; color:var(--ink3); display:block; letter-spacing:0; }
+  .fname{ font-size:14.5px; font-weight:800; display:block; margin-top:2px; }
+  td{ font-size:13px; color:var(--ink2); line-height:1.55; }
+  td .cal{ font-size:12.5px; }
+  td .cal b{ color:var(--ink); font-weight:700; }
+  .chip{ display:inline-block; font-size:11.5px; font-weight:800; border-radius:999px; padding:3px 11px; white-space:nowrap; }
+  .f-score{ background:#FDE9EA; color:var(--red); }
+  .f-agg{ background:#E5F5EE; color:var(--green); }
+  .f-event{ background:#EAF1FB; color:var(--blue); }
+  .f-tag{ background:#FBF3DC; color:#9A7000; }
+  .need-must{ color:#fff; background:var(--pc); }
+  .need-plus{ color:var(--pc); background:color-mix(in srgb, var(--pc) 10%, transparent); }
+  .use{ font-size:12.5px; }
+  .use b{ color:var(--ink); font-weight:700; }
+
+  /* acceptance */
+  .accept{ margin-top:26px; display:grid; grid-template-columns:1.2fr 1fr; gap:20px; }
+  .acc{ padding:24px 30px; }
+  .acc h3{ font-size:17px; font-weight:900; margin-bottom:12px; }
+  .arow{ display:flex; gap:13px; padding:10px 0; border-top:1px solid var(--line); }
+  .arow:first-of-type{ border-top:none; }
+  .arow .ai{ flex:0 0 36px; height:36px; border-radius:10px; display:grid; place-items:center; font-size:14px; font-weight:900; color:#fff; background:var(--red); }
+  .arow b{ display:block; font-size:14.5px; }
+  .arow span{ display:block; font-size:12.5px; color:var(--ink2); line-height:1.55; margin-top:2px; }
+  .howto{ padding:24px 30px; background:var(--dark); border-radius:18px; color:#fff; }
+  .howto h3{ font-size:17px; font-weight:900; margin-bottom:12px; }
+  .howto ol{ list-style:none; counter-reset:hs; }
+  .howto li{ font-size:13.5px; color:#D7DDE3; line-height:1.65; padding:9px 0 9px 36px; position:relative; counter-increment:hs; border-top:1px dashed rgba(255,255,255,.14); }
+  .howto li:first-child{ border-top:none; }
+  .howto li::before{ content:counter(hs); position:absolute; left:0; top:10px; width:24px; height:24px; border-radius:50%; background:var(--red); color:#fff; font-size:12.5px; font-weight:900; display:grid; place-items:center; }
+  .howto li b{ color:#fff; }
+  .backlink{ margin-top:24px; font-size:13.5px; color:var(--ink2); }
+  .backlink a{ color:var(--red); font-weight:700; }
+</style>
+</head>
+<body>
+
+<div class="hero" data-screen-label="特征清单 · 头图">
+  <div class="hero-in">
+    <div class="hero-top">
+      <div>
+        <div class="kicker">
+          <div class="bar"></div>
+          <div>
+            <div class="t1">鑫安汽车保险 × 一汽集团 · 数据特征需求清单</div>
+            <div class="t2">LEXISNEXIS RISK SOLUTIONS · 特征出域模板 · <a href="strategy-map.html" style="color:inherit;">← 返回战略地图</a></div>
+          </div>
+        </div>
+        <h1>湖内加工，<em>特征出域</em> — 鑫安到底要什么</h1>
+        <div class="sub">数据故事获得认可后的下一步：向一汽数据湖提出<b>特征级</b>需求。原始数据（轨迹、CAN 流、影像原片）全部留在集团数据湖内加工，出域的只有<b>能直接喂给平台产品的最终特征</b>。本清单是与一汽数据湖团队逐项确认口径的工作模板 — 每行都可以修改、删除或补充。</div>
+      </div>
+      <div class="hero-side">
+        <div class="item"><div class="v">6 <em>域</em></div><div class="l">对应战略地图六大数据域</div></div>
+        <div class="item"><div class="v">31 <em>项</em></div><div class="l">特征模板 · VIN × 月粒度为主</div></div>
+        <div class="item"><div class="v">3 <em>种</em></div><div class="l">出域形态 · 原始数据零出域</div></div>
+      </div>
+    </div>
+    <div class="pact">
+      <div class="pt">出域契约<small>只有三种形态<br>能离开数据湖</small></div>
+      <div class="form"><div class="fk">形态 ①</div><b>评分 / 指数</b><span>湖内模型计算的 0–100 指数或 200–997 评分，单值出域</span></div>
+      <div class="form"><div class="fk">形态 ②</div><b>聚合统计特征</b><span>VIN × 月（或周）粒度的统计值：占比、频次、分布分位数</span></div>
+      <div class="form"><div class="fk">形态 ③</div><b>脱敏事件包</b><span>出险/预警等事件触发的结构化切片，去标识、无原始影像</span></div>
+      <div class="no"><b>永不出域</b><span>原始 GPS 轨迹 · 原始 CAN 信号流 · 影像/视频原片 · 可逆识别个人的任何字段</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <h2>模板字段说明 — 每一列怎么填、怎么和数据湖对齐</h2>
+  <div class="h2sub">这是一份「逐行签字」的工作文档：每个特征双方确认口径后即冻结进特征字典，版本化管理</div>
+  <div class="card leg">
+    <div class="lc"><b>特征编码 / 名称</b><span>snake_case 编码进特征字典与 API；域前缀（drv/bat/adas/ad/acc/eco）标识归属</span></div>
+    <div class="lc"><b>业务描述</b><span>白话说明这个特征回答什么业务问题 — 管理层能看懂的那一句</span></div>
+    <div class="lc"><b>口径 · 单位</b><span>统计窗口、粒度、单位；阈值类参数（如急加速 G 值）由湖内统一标定并随字典版本冻结</span></div>
+    <div class="lc"><b>更新频率</b><span>月度批量 / 日批 / 事件触发；与平台刷新节奏对齐</span></div>
+    <div class="lc"><b>出域形态</b><span>评分指数 / 聚合统计 / 事件包 / 标签分箱 — 四类均不含原始数据</span></div>
+    <div class="lc"><b>支撑能力</b><span>特征直接喂给平台的哪个模块、形成什么产品或解决方案</span></div>
+    <div class="lc"><b>必要性</b><span>必需 = 该阶段产品上线的前提；增强 = 提升精度，可后补</span></div>
+  </div>
+
+  <!-- ============ 域1 行车动态 ============ -->
+  <div class="card dom" style="--pc:var(--p1);" data-screen-label="域1 行车动态">
+    <div class="dom-head">
+      <span class="ptag">P1 · 行车动态</span>
+      <div><b>驾驶行为与暴露特征</b><div class="ds">来源域内数据：GPS · IMU · 整车 CAN（均不出域）</div></div>
+      <div class="mods">支撑：<b>从车评分 · 定价数据集 · 核保用途核验</b></div>
+    </div>
+    <table>
+      <colgroup><col class="c-feat"><col class="c-desc"><col class="c-cal"><col class="c-freq"><col class="c-form"><col class="c-use"><col class="c-need"></colgroup>
+      <thead><tr><th>特征编码 / 名称</th><th>业务描述</th><th>口径 · 单位</th><th>更新频率</th><th>出域形态</th><th>支撑能力</th><th>必要性</th></tr></thead>
+      <tbody>
+        <tr><td><span class="fcode">drv_mileage_monthly</span><span class="fname">月行驶里程</span></td><td>风险暴露的基础量 — 开得越多，暴露越大</td><td class="cal"><b>VIN × 月</b> · km</td><td>月批</td><td><span class="chip f-agg">聚合统计</span></td><td class="use"><b>从车评分</b>暴露因子 · 定价数据集</td><td><span class="chip need-must">必需</span></td></tr>
+        <tr><td><span class="fcode">drv_harsh_event_rate</span><span class="fname">急加速/急减速频次</span></td><td>驾驶激进度的核心信号，与出险率强相关</td><td class="cal">每百公里事件数 · <b>次/100km</b>（G 值阈值湖内标定）</td><td>月批</td><td><span class="chip f-agg">聚合统计</span></td><td class="use"><b>从车评分</b>行为因子</td><td><span class="chip need-must">必需</span></td></tr>
+        <tr><td><span class="fcode">drv_usage_label</span><span class="fname">用途识别标签</span></td><td>时序模式识别的营运/非营运状态 — 杜绝网约车按家用承保的逆选择</td><td class="cal">枚举（家用/通勤/营运疑似/营运）+ 置信度 0–1</td><td>月批</td><td><span class="chip f-tag">标签分箱</span></td><td class="use"><b>核保用途核验</b> · 续保复核</td><td><span class="chip need-must">必需</span></td></tr>
+        <tr><td><span class="fcode">drv_night_ratio</span><span class="fname">夜间行驶占比</span></td><td>22:00–05:00 高风险时段的暴露占比</td><td class="cal">夜间里程 / 总里程 · <b>%</b></td><td>月批</td><td><span class="chip f-agg">聚合统计</span></td><td class="use">评分增强因子</td><td><span class="chip need-plus">增强</span></td></tr>
+        <tr><td><span class="fcode">drv_road_mix</span><span class="fname">道路类型暴露分布</span></td><td>高速/城市/其他道路的里程构成 — 不同路况风险差异显著</td><td class="cal">三类占比 · <b>%</b>（路网匹配在湖内完成）</td><td>月批</td><td><span class="chip f-agg">聚合统计</span></td><td class="use">评分增强因子 · 智驾对照基线</td><td><span class="chip need-plus">增强</span></td></tr>
+        <tr><td><span class="fcode">drv_regularity_idx</span><span class="fname">出行规律性指数</span></td><td>通勤越规律，风险越可预期 — 也是续保倾向的弱信号</td><td class="cal">0–100 指数 · 湖内模型计算</td><td>月批</td><td><span class="chip f-score">评分指数</span></td><td class="use">评分增强 · 用户分层</td><td><span class="chip need-plus">增强</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ============ 域2 充电与三电 ============ -->
+  <div class="card dom" style="--pc:var(--p1);" data-screen-label="域2 充电三电">
+    <div class="dom-head">
+      <span class="ptag">P1 · 充电与三电</span>
+      <div><b>电池健康与充电行为特征</b><div class="ds">来源域内数据：BMS · 充电会话记录（均不出域）</div></div>
+      <div class="mods">支撑：<b>从车评分 · 电池健康监控 · 车主养护建议</b></div>
+    </div>
+    <table>
+      <colgroup><col class="c-feat"><col class="c-desc"><col class="c-cal"><col class="c-freq"><col class="c-form"><col class="c-use"><col class="c-need"></colgroup>
+      <thead><tr><th>特征编码 / 名称</th><th>业务描述</th><th>口径 · 单位</th><th>更新频率</th><th>出域形态</th><th>支撑能力</th><th>必要性</th></tr></thead>
+      <tbody>
+        <tr><td><span class="fcode">bat_fast_charge_ratio</span><span class="fname">快充占比</span></td><td>长期快充加速电池衰减 — 三电出险的先导指标</td><td class="cal">快充会话 / 总会话 · <b>%</b> · VIN × 月</td><td>月批</td><td><span class="chip f-agg">聚合统计</span></td><td class="use"><b>从车评分</b>电池因子</td><td><span class="chip need-must">必需</span></td></tr>
+        <tr><td><span class="fcode">bat_temp_anomaly_cnt</span><span class="fname">电池温度异常事件数</span></td><td>充放电中的异常温升/温差次数 — 热风险直接信号</td><td class="cal"><b>次/月</b>（阈值湖内标定）</td><td>月批</td><td><span class="chip f-agg">聚合统计</span></td><td class="use"><b>从车评分</b> · 电池健康</td><td><span class="chip need-must">必需</span></td></tr>
+        <tr><td><span class="fcode">bat_soh_est</span><span class="fname">SOH 健康度估计</span></td><td>容量保持率 — 残值评估与电池险定价的锚点</td><td class="cal"><b>%</b> · 湖内模型估计 ± 置信区间</td><td>月批</td><td><span class="chip f-score">评分指数</span></td><td class="use"><b>电池健康</b> · 认证二手车残值</td><td><span class="chip need-must">必需</span></td></tr>
+        <tr><td><span class="fcode">bat_thermal_alert_lv</span><span class="fname">热失控前兆等级</span></td><td>湖内预警模型输出的分级标志 — 触发进站核查工单</td><td class="cal">枚举 0–3 级（0=正常）</td><td>日批/事件</td><td><span class="chip f-tag">标签分箱</span></td><td class="use"><b>预警工单</b> · 事中风险管理</td><td><span class="chip need-must">必需</span></td></tr>
+        <tr><td><span class="fcode">bat_charge_habit_bin</span><span class="fname">充电习惯分箱</span></td><td>满充频率、深放频率等习惯归类 — 养护建议的依据</td><td class="cal">枚举（良好/一般/待改善）</td><td>月批</td><td><span class="chip f-tag">标签分箱</span></td><td class="use">车主 App <b>养护建议</b></td><td><span class="chip need-plus">增强</span></td></tr>
+        <tr><td><span class="fcode">bat_soc_stress_idx</span><span class="fname">SOC 应力指数</span></td><td>高/低电量驻留时长加权 — 慢性损耗的量化</td><td class="cal">0–100 指数</td><td>月批</td><td><span class="chip f-score">评分指数</span></td><td class="use">电池健康 · 评分增强</td><td><span class="chip need-plus">增强</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ============ 域3 ADAS ============ -->
+  <div class="card dom" style="--pc:var(--p2);" data-screen-label="域3 ADAS">
+    <div class="dom-head">
+      <span class="ptag">P2 · ADAS 辅助驾驶</span>
+      <div><b>主动安全使用与触发特征</b><div class="ds">来源域内数据：AEB/LKA/ACC 功能状态与触发日志（均不出域）</div></div>
+      <div class="mods">支撑：<b>ADAS 费率修正 · 理赔定责 · App 安全教育</b></div>
+    </div>
+    <table>
+      <colgroup><col class="c-feat"><col class="c-desc"><col class="c-cal"><col class="c-freq"><col class="c-form"><col class="c-use"><col class="c-need"></colgroup>
+      <thead><tr><th>特征编码 / 名称</th><th>业务描述</th><th>口径 · 单位</th><th>更新频率</th><th>出域形态</th><th>支撑能力</th><th>必要性</th></tr></thead>
+      <tbody>
+        <tr><td><span class="fcode">adas_on_ratio</span><span class="fname">关键功能常开率</span></td><td>AEB/LKA 等功能的开启时长占比 — 常开车辆出险率更低，应获费率优待</td><td class="cal">开启时长 / 行驶时长 · <b>%</b> · 按功能分列</td><td>月批</td><td><span class="chip f-agg">聚合统计</span></td><td class="use"><b>ADAS 费率修正</b>因子</td><td><span class="chip need-must">必需</span></td></tr>
+        <tr><td><span class="fcode">adas_aeb_trigger_rate</span><span class="fname">AEB/FCW 触发率</span></td><td>千公里主动安全介入次数 — 既是风险信号也是功能有效性证据</td><td class="cal"><b>次/1000km</b> · 按触发类型分列</td><td>月批</td><td><span class="chip f-agg">聚合统计</span></td><td class="use">费率修正 · 风险监控</td><td><span class="chip need-must">必需</span></td></tr>
+        <tr><td><span class="fcode">adas_precrash_chain</span><span class="fname">碰撞前预警事件链</span></td><td>事故前 N 秒的预警/介入序列 — 厘清事故成因的关键证据</td><td class="cal">结构化事件包（时序 + 类型，去标识）</td><td>事件触发</td><td><span class="chip f-event">事件包</span></td><td class="use"><b>理赔定责</b> · 事故还原</td><td><span class="chip need-must">必需</span></td></tr>
+        <tr><td><span class="fcode">adas_idle_flag</span><span class="fname">「买而不用」标志</span></td><td>装配高阶功能但长期关闭的车辆标签 — App 教育激活的目标人群</td><td class="cal">布尔 + 关闭时长占比</td><td>月批</td><td><span class="chip f-tag">标签分箱</span></td><td class="use">App <b>安全功能引导</b></td><td><span class="chip need-plus">增强</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ============ 域4 智驾 L3+ ============ -->
+  <div class="card dom" style="--pc:var(--p3);" data-screen-label="域4 智驾L3+">
+    <div class="dom-head">
+      <span class="ptag">P3 · 智驾 L3+</span>
+      <div><b>三通道智驾风险特征</b><div class="ds">来源域内数据：智驾状态机 · 域控日志（均不出域）· 详见<a href="ad-risk-training.html" style="color:var(--pc);">训练体系专题</a></div></div>
+      <div class="mods">支撑：<b>智驾保险计价 · OTA 风险回归 · 用户智驾分</b></div>
+    </div>
+    <table>
+      <colgroup><col class="c-feat"><col class="c-desc"><col class="c-cal"><col class="c-freq"><col class="c-form"><col class="c-use"><col class="c-need"></colgroup>
+      <thead><tr><th>特征编码 / 名称</th><th>业务描述</th><th>口径 · 单位</th><th>更新频率</th><th>出域形态</th><th>支撑能力</th><th>必要性</th></tr></thead>
+      <tbody>
+        <tr><td><span class="fcode">ad_sw_version</span><span class="fname">智驾软件版本标识</span></td><td>一切智驾特征的分层键 — 跨版本聚合会污染统计</td><td class="cal">版本号字符串 + 生效日期</td><td>随 OTA</td><td><span class="chip f-tag">标签分箱</span></td><td class="use"><b>版本分层</b>（所有智驾特征的前提）</td><td><span class="chip need-must">必需</span></td></tr>
+        <tr><td><span class="fcode">ad_active_exposure</span><span class="fname">智驾激活里程与占比</span></td><td>系统驾驶的暴露量 — 按激活里程计价的基础</td><td class="cal">激活 km 及占比 · <b>VIN × 月 × 版本</b></td><td>月批</td><td><span class="chip f-agg">聚合统计</span></td><td class="use"><b>智驾保险计价</b> · 通道 B</td><td><span class="chip need-must">必需</span></td></tr>
+        <tr><td><span class="fcode">ad_mpi</span><span class="fname">平均接管间隔 MPI</span></td><td>每多少公里发生一次接管 — 系统成熟度的核心指标</td><td class="cal"><b>km/次</b> · 版本 × 场景分层</td><td>月批</td><td><span class="chip f-agg">聚合统计</span></td><td class="use">版本×场景风险矩阵</td><td><span class="chip need-must">必需</span></td></tr>
+        <tr><td><span class="fcode">ad_takeover_latency</span><span class="fname">接管响应时延分布</span></td><td>接管请求到稳定控制的耗时 — 切换风险（通道 C）的核心</td><td class="cal">P50 / P95 · <b>秒</b> · VIN × 月</td><td>月批</td><td><span class="chip f-agg">聚合统计</span></td><td class="use"><b>接管质量分</b> · 通道 C</td><td><span class="chip need-must">必需</span></td></tr>
+        <tr><td><span class="fcode">ad_mrc_rate</span><span class="fname">MRC 触发率</span></td><td>系统进入最小风险状态的频率 — 系统驾风险的硬信号</td><td class="cal"><b>次/万 km</b> · 版本分层</td><td>月批</td><td><span class="chip f-agg">聚合统计</span></td><td class="use">通道 B · OTA 风险回归</td><td><span class="chip need-must">必需</span></td></tr>
+        <tr><td><span class="fcode">ad_odd_boundary_pack</span><span class="fname">ODD 边界事件包</span></td><td>退出 ODD 前后的结构化切片 — 责任判定与场景库的素材</td><td class="cal">结构化事件包（去标识，无影像原片）</td><td>事件触发</td><td><span class="chip f-event">事件包</span></td><td class="use"><b>责任判定</b> · 场景库共建</td><td><span class="chip need-plus">增强</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ============ 域5 影像与事故 ============ -->
+  <div class="card dom" style="--pc:var(--p2);" data-screen-label="域5 影像事故">
+    <div class="dom-head">
+      <span class="ptag">P2 · 影像与事故</span>
+      <div><b>事故事件与定损特征</b><div class="ds">来源域内数据：EDR · 行车记录 · 碰撞传感（影像原片不出域，只出结构化结果）</div></div>
+      <div class="mods">支撑：<b>一键报案 · 远程定损 · 反欺诈核验</b></div>
+    </div>
+    <table>
+      <colgroup><col class="c-feat"><col class="c-desc"><col class="c-cal"><col class="c-freq"><col class="c-form"><col class="c-use"><col class="c-need"></colgroup>
+      <thead><tr><th>特征编码 / 名称</th><th>业务描述</th><th>口径 · 单位</th><th>更新频率</th><th>出域形态</th><th>支撑能力</th><th>必要性</th></tr></thead>
+      <tbody>
+        <tr><td><span class="fcode">acc_collision_pack</span><span class="fname">碰撞事件包</span></td><td>碰撞时刻的 EDR 时序摘要（速度/制动/方向盘）+ 碰撞强度 — 报案与定损的起点</td><td class="cal">结构化事件包 · 事发前 5 秒摘要 · 去标识</td><td>事件触发</td><td><span class="chip f-event">事件包</span></td><td class="use"><b>一键报案</b> · 事故还原</td><td><span class="chip need-must">必需</span></td></tr>
+        <tr><td><span class="fcode">acc_severity_lv</span><span class="fname">碰撞严重度分级</span></td><td>湖内模型按碰撞强度输出等级 — 理赔自动分流（快赔/查勘）</td><td class="cal">枚举 1–4 级</td><td>事件触发</td><td><span class="chip f-tag">标签分箱</span></td><td class="use"><b>理赔分流</b> · 快赔通道</td><td><span class="chip need-must">必需</span></td></tr>
+        <tr><td><span class="fcode">acc_damage_struct</span><span class="fname">定损图像结构化结果</span></td><td>受损部位 + 程度的结构化判读（湖内视觉模型，原片不出域）</td><td class="cal">部位枚举 × 程度分级 + 置信度</td><td>事件触发</td><td><span class="chip f-event">事件包</span></td><td class="use"><b>图像远程定损</b></td><td><span class="chip need-must">必需</span></td></tr>
+        <tr><td><span class="fcode">acc_claim_consistency</span><span class="fname">报案一致性核验标志</span></td><td>报案描述与行车状态的交叉验证结果 — 欺诈识别信号</td><td class="cal">枚举（一致/存疑/不一致）+ 原因码</td><td>事件触发</td><td><span class="chip f-tag">标签分箱</span></td><td class="use"><b>反欺诈</b> · 人工复核线索</td><td><span class="chip need-plus">增强</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ============ 域6 座舱与用户生态 ============ -->
+  <div class="card dom" style="--pc:var(--p3);" data-screen-label="域6 座舱生态">
+    <div class="dom-head">
+      <span class="ptag">P3 · 座舱与用户生态</span>
+      <div><b>用户经营与续保特征</b><div class="ds">来源域内数据：车机使用 · 服务消费 · 会员体系（均不出域，只出分箱与指数）</div></div>
+      <div class="mods">支撑：<b>续保运营 · 用户分层 · 流失挽留</b></div>
+    </div>
+    <table>
+      <colgroup><col class="c-feat"><col class="c-desc"><col class="c-cal"><col class="c-freq"><col class="c-form"><col class="c-use"><col class="c-need"></colgroup>
+      <thead><tr><th>特征编码 / 名称</th><th>业务描述</th><th>口径 · 单位</th><th>更新频率</th><th>出域形态</th><th>支撑能力</th><th>必要性</th></tr></thead>
+      <tbody>
+        <tr><td><span class="fcode">eco_engage_bin</span><span class="fname">App / 车机活跃分层</span></td><td>用户触达渠道是否有效 — 决定权益与提醒怎么投放</td><td class="cal">枚举（高/中/低/沉默）· VIN × 月</td><td>月批</td><td><span class="chip f-tag">标签分箱</span></td><td class="use"><b>用户分层</b>运营</td><td><span class="chip need-must">必需</span></td></tr>
+        <tr><td><span class="fcode">eco_service_depth_bin</span><span class="fname">服务消费深度分箱</span></td><td>充电/保养/会员的消费粘性 — 生态价值与忠诚度的代理变量</td><td class="cal">枚举（深/中/浅）· 按服务线分列</td><td>月批</td><td><span class="chip f-tag">标签分箱</span></td><td class="use">用户分层 · 权益设计</td><td><span class="chip need-plus">增强</span></td></tr>
+        <tr><td><span class="fcode">eco_renewal_score</span><span class="fname">续保倾向分</span></td><td>湖内模型综合用车深度与服务粘性的预测分 — 续保动作的优先级排序</td><td class="cal">0–100 指数 · VIN × 月</td><td>月批</td><td><span class="chip f-score">评分指数</span></td><td class="use"><b>续保运营</b>名单排序</td><td><span class="chip need-must">必需</span></td></tr>
+        <tr><td><span class="fcode">eco_churn_flag</span><span class="fname">流失预警标志</span></td><td>用车频次显著衰减的早期信号 — 挽留窗口期提示</td><td class="cal">布尔 + 衰减幅度分箱</td><td>月批</td><td><span class="chip f-tag">标签分箱</span></td><td class="use">流失<b>挽留</b>触达</td><td><span class="chip need-plus">增强</span></td></tr>
+        <tr><td><span class="fcode">eco_insure_touch_pref</span><span class="fname">保险触点偏好</span></td><td>用户对保险内容的渠道偏好（车机/App/短信）— 提高转化、减少打扰</td><td class="cal">枚举 + 响应率分箱</td><td>月批</td><td><span class="chip f-tag">标签分箱</span></td><td class="use">续保触达策略</td><td><span class="chip need-plus">增强</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ============ acceptance & how to use ============ -->
+  <h2>特征验收三要素 + 模板使用方法</h2>
+  <div class="h2sub">每个特征出域前过同一道验收关；清单本身按特征字典版本化管理，逐版冻结</div>
+  <div class="accept">
+    <div class="card acc">
+      <h3>每个特征的验收三要素</h3>
+      <div class="arow"><div class="ai">覆</div><div><b>覆盖率与缺失率</b><span>特征在承保车队的可计算覆盖率 ≥ 约定阈值（建议 ≥ 90%），缺失原因可解释（信号未装配 / 授权未开 / 数据质量）</span></div></div>
+      <div class="arow"><div class="ai">时</div><div><b>时效与稳定性</b><span>到达延迟符合更新频率约定；分布漂移（PSI）月度监控，超阈值触发口径复核</span></div></div>
+      <div class="arow"><div class="ai">效</div><div><b>与赔付的相关性回测</b><span>特征对赔付率的单调性与区分度回测达标后，才进入定价模型 — 不达标的特征退回模板池</span></div></div>
+    </div>
+    <div class="howto">
+      <h3>这份模板怎么用（建议流程）</h3>
+      <ol>
+        <li><b>鑫安圈选</b>：按产品上线顺序勾选「必需」特征（第一批 = P1 两域 12 项中的 7 项必需）</li>
+        <li><b>一汽数据湖对口径</b>：逐行确认可计算性、窗口与阈值，改写「口径」列后冻结为特征字典 v1.0</li>
+        <li><b>合规评审</b>：每个特征核对出域形态与授权范围，确认无原始数据、不可逆识别</li>
+        <li><b>湖内开发 + 验收</b>：按三要素验收，达标特征进入月度交付管道，直接喂给从车风险数据平台</li>
+        <li><b>滚动扩充</b>：P2/P3 特征随阶段启动重复 1–4，模板持续生长</li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="backlink">← 返回 <a href="strategy-map.html">数据战略全景地图</a> · <a href="platform.html">从车风险数据平台</a> · <a href="ad-risk-training.html">智驾风险模型训练体系</a> · 本清单为工作模板：特征命名、口径与阈值以双方特征字典评审为准</div>
+</div>
+
+</body>
+</html>

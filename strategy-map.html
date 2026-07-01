@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>主机厂全局数据战略地图 · 鑫安汽车保险 × 一汽集团</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --red:#ED1C24; --red-soft:#FDE9EA;
+    --ink:#16202B; --ink2:#56636F; --ink3:#909AA6;
+    --bg:#EEF1F4; --line:#E4E8EE; --dark:#11161B;
+    --teal:#00778B; --green:#00AF66; --amber:#E1A300; --orange:#FF8200; --blue:#2A6FDB;
+    --p1:var(--red); --p2:#FF8200; --p3:#00778B; --p0:#3C4A56;
+  }
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  body{ font-family:"Noto Sans SC","PingFang SC","Microsoft YaHei",sans-serif; background:var(--bg); color:var(--ink); }
+  .wrap{ max-width:1640px; margin:0 auto; padding:0 40px 64px; }
+
+  /* ---- hero ---- */
+  .hero{ background:var(--dark); color:#fff; }
+  .hero-in{ max-width:1640px; margin:0 auto; padding:46px 40px 40px; display:flex; justify-content:space-between; gap:40px; align-items:flex-end; }
+  .kicker{ display:flex; align-items:center; gap:16px; }
+  .kicker .bar{ width:9px; height:42px; background:var(--red); border-radius:3px; }
+  .kicker .t1{ font-size:21px; font-weight:900; letter-spacing:.06em; }
+  .kicker .t2{ font-size:13px; font-weight:600; color:#8C98A4; letter-spacing:.2em; margin-top:3px; }
+  .hero h1{ font-size:46px; font-weight:900; line-height:1.25; margin-top:22px; letter-spacing:.01em; }
+  .hero h1 em{ font-style:normal; color:var(--red); }
+  .hero .sub{ font-size:17px; color:#AEB8C2; margin-top:14px; line-height:1.7; max-width:880px; }
+  .hero .sub b{ color:#fff; }
+  .hero-side{ flex:0 0 auto; text-align:right; }
+  .hero-side .item{ margin-bottom:14px; }
+  .hero-side .v{ font-size:30px; font-weight:900; color:#fff; }
+  .hero-side .v em{ font-style:normal; color:var(--red); }
+  .hero-side .l{ font-size:13px; color:#8C98A4; margin-top:2px; }
+
+  /* ---- big picture (一页总图) ---- */
+  .bigpic{ background:#fff; border:1px solid var(--line); border-radius:18px; padding:30px 34px 26px; box-shadow:0 1px 2px rgba(20,30,45,.05); }
+  .bp-head{ display:flex; justify-content:space-between; align-items:baseline; gap:20px; margin-bottom:20px; }
+  .bp-head h2{ margin:0; }
+  .bp-head a{ font-size:13.5px; font-weight:700; color:var(--red); text-decoration:none; border:1px solid color-mix(in srgb, var(--red) 40%, transparent); border-radius:999px; padding:7px 16px; white-space:nowrap; }
+  .bp-head a:hover{ background:var(--red-soft); }
+  .bp-flow{ display:grid; grid-template-columns:1fr 44px 1.05fr 44px 1.25fr; gap:0; align-items:stretch; }
+  .bp-col{ border-radius:14px; padding:20px 22px; display:flex; flex-direction:column; }
+  .bp-col .bk{ font-size:12px; font-weight:800; letter-spacing:.12em; margin-bottom:4px; }
+  .bp-col b.bt{ font-size:19px; font-weight:900; display:block; }
+  .bp-col .bs{ font-size:12.5px; margin-top:3px; line-height:1.5; }
+  .bp-give{ background:#EAF1FB; border:1.5px solid #C8D9F2; }
+  .bp-give .bk{ color:var(--blue); }
+  .bp-give .bs{ color:#4A607a; color:#54677e; }
+  .bp-domains{ display:flex; flex-wrap:wrap; gap:7px; margin-top:14px; }
+  .bp-domains span{ font-size:12.5px; font-weight:700; padding:5px 12px; border-radius:999px; background:#fff; border:1px solid color-mix(in srgb, var(--pc) 45%, transparent); color:var(--pc); white-space:nowrap; }
+  .bp-p0{ margin-top:auto; padding-top:14px; font-size:12px; color:#54677e; line-height:1.55; border-top:1px dashed #C8D9F2; }
+  .bp-p0 b{ color:var(--ink); }
+  .bp-core{ background:var(--dark); color:#fff; }
+  .bp-core .bk{ color:var(--red); }
+  .bp-core .bs{ color:#AEB8C2; }
+  .bp-caps{ list-style:none; margin-top:14px; display:flex; flex-direction:column; gap:9px; }
+  .bp-caps li{ font-size:13.5px; line-height:1.5; color:#D7DDE3; padding-left:15px; position:relative; }
+  .bp-caps li::before{ content:""; position:absolute; left:0; top:7px; width:7px; height:7px; border-radius:50%; background:var(--red); }
+  .bp-caps li b{ color:#fff; }
+  .bp-core .bp-p0{ border-top-color:rgba(255,255,255,.16); color:#8C98A4; }
+  .bp-core .bp-p0 b{ color:#fff; }
+  .bp-value{ background:var(--bg); border:1.5px solid var(--line); padding:16px 18px; gap:10px; }
+  .bp-value .bk{ color:var(--ink2); }
+  .vrowx{ background:#fff; border:1px solid var(--line); border-radius:11px; padding:11px 15px; display:flex; gap:12px; align-items:flex-start; flex:1; }
+  .vrowx .vm{ flex:0 0 auto; width:10px; height:10px; border-radius:50%; margin-top:7px; }
+  .vrowx b{ font-size:14.5px; display:block; }
+  .vrowx span{ font-size:12.5px; color:var(--ink2); line-height:1.5; display:block; margin-top:2px; }
+  .bp-arrow{ display:grid; place-items:center; color:var(--ink3); }
+  .bp-loop{ margin-top:18px; display:flex; align-items:center; gap:16px; background:var(--red-soft); border:1.5px dashed color-mix(in srgb, var(--red) 45%, transparent); border-radius:12px; padding:13px 20px; }
+  .bp-loop svg{ flex:0 0 auto; }
+  .bp-loop .lt{ font-size:14.5px; font-weight:700; color:var(--ink); line-height:1.55; }
+  .bp-loop .lt b{ color:var(--red); }
+
+  /* ---- phase tabs ---- */
+  .phasebar{ display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin:30px 0 30px; position:relative; z-index:2; }
+  .phase{ background:#fff; border:1px solid var(--line); border-radius:16px; padding:20px 22px; cursor:pointer; transition:all .15s; box-shadow:0 1px 2px rgba(20,30,45,.05); position:relative; overflow:hidden; }
+  .phase::before{ content:""; position:absolute; left:0; top:0; bottom:0; width:6px; background:var(--pc); }
+  .phase .pno{ font-size:12px; font-weight:800; letter-spacing:.14em; color:var(--pc); }
+  .phase b{ display:block; font-size:19px; font-weight:900; margin-top:5px; }
+  .phase span{ display:block; font-size:13px; color:var(--ink2); margin-top:6px; line-height:1.55; }
+  .phase .when{ display:inline-block; margin-top:10px; font-size:12px; font-weight:700; color:var(--pc); background:color-mix(in srgb, var(--pc) 10%, transparent); padding:3px 11px; border-radius:999px; white-space:nowrap; }
+  .phase:hover{ transform:translateY(-2px); box-shadow:0 6px 18px rgba(20,30,45,.1); }
+  .phase.on{ border-color:var(--pc); box-shadow:0 0 0 2px var(--pc), 0 8px 22px rgba(20,30,45,.12); }
+
+  /* ---- section heads ---- */
+  h2{ font-size:25px; font-weight:900; margin:38px 0 6px; }
+  .h2sub{ font-size:14.5px; color:var(--ink3); margin-bottom:18px; }
+
+  /* ---- panorama grid ---- */
+  .grid{ background:#fff; border:1px solid var(--line); border-radius:18px; overflow:hidden; box-shadow:0 1px 2px rgba(20,30,45,.05); }
+  table{ border-collapse:collapse; width:100%; table-layout:fixed; }
+  th, td{ border:1px solid var(--line); vertical-align:top; }
+  thead th{ background:var(--dark); color:#fff; font-size:15.5px; font-weight:800; padding:14px 16px; text-align:left; }
+  thead th small{ display:block; font-size:11.5px; font-weight:600; color:#8C98A4; letter-spacing:.1em; margin-top:3px; }
+  thead th:first-child{ width:172px; }
+  tbody th{ background:#F8FAFC; padding:16px; text-align:left; }
+  tbody th .dn{ font-size:16px; font-weight:900; }
+  tbody th .ds{ font-size:12px; color:var(--ink3); font-weight:500; margin-top:5px; line-height:1.5; }
+  td{ padding:8px; }
+  .cell{ border-radius:10px; padding:10px 12px; min-height:74px; transition:opacity .18s, filter .18s; border:1px solid color-mix(in srgb, var(--pc) 32%, transparent); background:color-mix(in srgb, var(--pc) 6%, #fff); height:100%; }
+  .cell .ptag{ font-size:10.5px; font-weight:800; letter-spacing:.08em; color:var(--pc); }
+  .cell b{ display:block; font-size:14.5px; font-weight:800; margin-top:3px; line-height:1.4; }
+  .cell span{ display:block; font-size:12px; color:var(--ink2); line-height:1.5; margin-top:4px; }
+  .cell a{ color:var(--pc); font-weight:700; text-decoration:none; border-bottom:1px dashed var(--pc); }
+  td .empty{ min-height:74px; border-radius:10px; border:1px dashed var(--line); display:grid; place-items:center; font-size:12px; color:var(--ink3); height:100%; }
+  body[data-f="p1"] .cell:not([data-p="p1"]), body[data-f="p2"] .cell:not([data-p="p2"]), body[data-f="p3"] .cell:not([data-p="p3"]), body[data-f="p0"] .cell{ opacity:.18; filter:grayscale(.7); }
+  body[data-f="p0"] .base{ box-shadow:0 0 0 2.5px var(--p0); }
+
+  /* ---- base layer ---- */
+  .base{ margin-top:16px; background:var(--dark); border-radius:16px; color:#fff; padding:20px 26px; display:flex; align-items:center; gap:28px; }
+  .base .bt{ flex:0 0 auto; }
+  .base .bt b{ font-size:17px; font-weight:900; display:block; }
+  .base .bt span{ font-size:12.5px; color:#8C98A4; }
+  .base ul{ flex:1; display:grid; grid-template-columns:repeat(5,1fr); gap:14px; list-style:none; }
+  .base li{ font-size:13px; line-height:1.5; color:#D7DDE3; padding-left:14px; position:relative; }
+  .base li::before{ content:""; position:absolute; left:0; top:7px; width:6px; height:6px; border-radius:50%; background:var(--red); }
+  .base li b{ display:block; color:#fff; font-size:13.5px; }
+
+  /* ---- timeline ---- */
+  .tl{ background:#fff; border:1px solid var(--line); border-radius:18px; padding:30px 34px 26px; box-shadow:0 1px 2px rgba(20,30,45,.05); }
+  .tl-track{ margin:0 10px; display:flex; flex-direction:column; gap:4px; }
+  .tl-lane{ position:relative; height:6px; background:var(--bg); border-radius:3px; }
+  .tl-lane i{ position:absolute; top:0; bottom:0; border-radius:3px; }
+  .tl-scale{ display:flex; justify-content:space-between; font-size:11px; color:var(--ink3); margin-top:4px; font-variant-numeric:tabular-nums; }
+  .tl-cols{ display:grid; grid-template-columns:0.7fr 1fr 1.15fr 1.15fr; gap:18px; margin-top:18px; }
+  .tl-col .tno{ display:flex; align-items:center; gap:8px; font-size:13px; font-weight:800; color:var(--pc); }
+  .tl-col .tno::before{ content:""; width:11px; height:11px; border-radius:50%; background:var(--pc); }
+  .tl-col b{ display:block; font-size:16.5px; font-weight:900; margin-top:6px; }
+  .tl-col .tw{ font-size:12px; color:var(--ink3); font-weight:700; }
+  .tl-col ul{ list-style:none; margin-top:8px; }
+  .tl-col li{ font-size:13px; color:var(--ink2); line-height:1.55; padding-left:13px; position:relative; }
+  .tl-col li::before{ content:""; position:absolute; left:0; top:8px; width:5px; height:5px; border-radius:50%; background:var(--pc); }
+  .tl-col .kpi{ margin-top:10px; font-size:12.5px; font-weight:700; color:var(--pc); background:color-mix(in srgb, var(--pc) 8%, transparent); border-radius:8px; padding:7px 11px; display:inline-block; }
+
+  .foot{ margin-top:26px; display:flex; gap:14px; align-items:flex-start; font-size:13px; color:var(--ink2); line-height:1.7; }
+  .foot .fi{ flex:1; background:#fff; border:1px solid var(--line); border-radius:14px; padding:16px 20px; }
+  .foot b{ color:var(--ink); }
+  .legend{ display:flex; gap:18px; align-items:center; font-size:13px; color:var(--ink2); margin:14px 2px 0; flex-wrap:wrap; }
+  .legend i{ width:12px; height:12px; border-radius:4px; display:inline-block; margin-right:6px; vertical-align:-1px; font-style:normal; }
+</style>
+</head>
+<body data-f="all">
+
+<div class="hero">
+  <div class="hero-in">
+    <div>
+      <div class="kicker">
+        <div class="bar"></div>
+        <div>
+          <div class="t1">鑫安汽车保险 × 一汽集团 · 主机厂全局数据战略地图</div>
+          <div class="t2">LEXISNEXIS RISK SOLUTIONS · 分阶段数据价值释放 · <a href="platform.html" style="color:inherit;">← 返回数据平台</a></div>
+        </div>
+      </div>
+      <h1>以 <em>UBI 从车风险</em>为突破口，<br>让集团看见数据的全景价值</h1>
+      <div class="sub">本图服务于鑫安向集团管理层的汇报：<b>先让集团看见风险（从车风险数据平台），再看见风险与运营数据的全局价值，进而明确数据开放的优先级</b>。横轴是保险与运营价值链，纵轴是六大数据域；每个能力标注了建议阶段，点击阶段卡片可筛选。UBI 只需两个数据域、验证路径最短，是拿到「第一张成绩单」的最快起点。</div>
+    </div>
+    <div class="hero-side">
+      <div class="item"><div class="v">6 <em>大</em></div><div class="l">主机厂数据域</div></div>
+      <div class="item"><div class="v">4 <em>条</em></div><div class="l">保险与运营价值链</div></div>
+      <div class="item"><div class="v">24 <em>项</em></div><div class="l">数据能力 · 分三阶段点亮</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <!-- 一页总图 -->
+  <div style="height:30px;"></div>
+  <div class="bigpic" data-screen-label="一页总图">
+    <div class="bp-head">
+      <div>
+        <h2>一页总图 · 为什么向鑫安开放数据，价值怎么产生</h2>
+        <div class="h2sub" style="margin-bottom:0;">数据留在集团域内加工增值 · 价值回流保险、集团、车主三方 · 结果换开放、越用越准的飞轮</div>
+      </div>
+      <a href="strategy-onepager.html">可投屏 / 打印的一页汇报版 →</a>
+    </div>
+    <div class="bp-flow">
+      <div class="bp-col bp-give">
+        <div class="bk">一汽集团 · 开放什么</div>
+        <b class="bt">六大数据域 · 分阶段授权</b>
+        <div class="bs">不是一次性全量开放，而是按阶段、按场景最小化取数</div>
+        <div class="bp-domains">
+          <span style="--pc:var(--p1);">P1 行车动态</span>
+          <span style="--pc:var(--p1);">P1 充电与三电</span>
+          <span style="--pc:var(--p2);">P2 ADAS</span>
+          <span style="--pc:var(--p2);">P2 影像与事故</span>
+          <span style="--pc:var(--p3);">P3 智驾 L3+</span>
+          <span style="--pc:var(--p3);">P3 座舱与生态</span>
+        </div>
+        <div class="bp-p0"><b>P0 合规底座：</b>数据不出主机厂域 · 车主分级授权 · 脱敏聚合 · 全程审计留痕</div>
+      </div>
+      <div class="bp-arrow"><svg width="26" height="26" viewBox="0 0 26 26" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 13h18M14 6l7 7-7 7"/></svg></div>
+      <div class="bp-col bp-core">
+        <div class="bk">鑫安 × 律商 · 怎么变成能力</div>
+        <b class="bt">风险数据能力平台</b>
+        <div class="bs">集团自己的保险公司 + 专业风险建模方，数据在域内加工，只出结果不出原始数据</div>
+        <ul class="bp-caps">
+          <li><b>从车风险评分</b> · 原始信号 → 可解释评分 → 定价数据集</li>
+          <li><b>理赔智能化</b> · 图像定损 · 碰撞还原 · 维修线索</li>
+          <li><b>智驾风险模型</b> · 准 L3+ 三通道评价与训练体系</li>
+          <li><b>车主运营</b> · 健康分 · 权益 · 品牌 App 触达</li>
+        </ul>
+        <div class="bp-p0"><b>已就绪：</b>从车风险数据平台演示环境 — 风险第一次被「看见」</div>
+      </div>
+      <div class="bp-arrow"><svg width="26" height="26" viewBox="0 0 26 26" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 13h18M14 6l7 7-7 7"/></svg></div>
+      <div class="bp-col bp-value">
+        <div class="bk">价值回流 · 三方各得什么</div>
+        <div class="vrowx"><span class="vm" style="background:var(--red);"></span><div><b>鑫安 · 保险经营</b><span>定价更准（赔付率区分度目标 3×+） · 理赔降本 · 逆选择减少 → 承保盈利能力提升</span></div></div>
+        <div class="vrowx"><span class="vm" style="background:var(--teal);"></span><div><b>一汽集团 · 生态与研发</b><span>售后产值留在 4S 体系 · 真实工况反哺研发 · 智驾安全成为可量化资产 · 保险利润作为股东回报</span></div></div>
+        <div class="vrowx"><span class="vm" style="background:var(--green);"></span><div><b>车主 · 体验与实惠</b><span>保费随行为 · 电池养护建议 · 智驾透明化 → 品牌信任与复购</span></div></div>
+      </div>
+    </div>
+    <div class="bp-loop">
+      <svg width="30" height="30" viewBox="0 0 30 30" fill="none" stroke="#ED1C24" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M25 15a10 10 0 1 1-3-7.1"/><path d="M25 4v5h-5"/></svg>
+      <div class="lt">飞轮：每一阶段用<b>保险侧可验证的业务结果</b>换取下一阶段的数据开放 —— P1 证明「数据能看见风险」，P2 证明「数据能降本增收」，P3 证明「数据能定义新产品」；数据越用越准，信任越积越深。</div>
+    </div>
+  </div>
+
+  <!-- phase tabs -->
+  <div class="phasebar">
+    <div class="phase" data-p="p0" style="--pc:var(--p0);">
+      <div class="pno">底座 · 贯穿全程</div>
+      <b>数据治理与合规</b>
+      <span>分级授权 · 隐私脱敏 · 数据不出主机厂域 · 审计留痕</span>
+      <span class="when">0–6 个月 · 先行启动（建议）</span>
+    </div>
+    <div class="phase on" data-p="p1" style="--pc:var(--p1);">
+      <div class="pno">第一阶段 · 突破口</div>
+      <b>UBI 从车风险</b>
+      <span>行车 + 充电数据 → 从车评分 → 续保定价，让集团看见风险</span>
+      <span class="when">6–24 个月（建议）· 首先启动</span>
+    </div>
+    <div class="phase" data-p="p2" style="--pc:var(--p2);">
+      <div class="pno">第二阶段 · 深化</div>
+      <b>理赔智能化 + ADAS</b>
+      <span>图像远程定损 · 碰撞事故还原 · 维修线索 · ADAS 风险修正</span>
+      <span class="when">12–36 个月（建议）· 与 P1 交叠并行</span>
+    </div>
+    <div class="phase" data-p="p3" style="--pc:var(--p3);">
+      <div class="pno">第三阶段 · 升维</div>
+      <b>智驾风险 + 生态运营</b>
+      <span>L3+ 智驾风险评价模型 · 座舱体验优化 · 用户生态分层</span>
+      <span class="when">24–48 个月（建议）</span>
+    </div>
+  </div>
+
+  <h2>数据能力全景图 <a href="data-features.html" style="font-size:13.5px; font-weight:700; color:var(--red); text-decoration:none; border:1px solid color-mix(in srgb, var(--red) 40%, transparent); border-radius:999px; padding:7px 16px; vertical-align:6px; margin-left:14px; white-space:nowrap;">配套：数据特征需求清单（特征出域模板）→</a></h2>
+  <div class="h2sub">纵轴 = 主机厂六大数据域 · 横轴 = 价值链场景 · 颜色 = 所处阶段（点击上方阶段卡片筛选，再点一次还原）</div>
+
+  <div class="grid">
+    <table>
+      <thead>
+        <tr>
+          <th>数据域 ↓ / 价值链 →</th>
+          <th>风险定价与核保<small>PRICING & UNDERWRITING</small></th>
+          <th>理赔与定损<small>CLAIMS</small></th>
+          <th>客户运营与体验<small>ENGAGEMENT</small></th>
+          <th>研发与产品反哺<small>R&D FEEDBACK</small></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th><div class="dn">行车动态</div><div class="ds">GPS · IMU · 整车 CAN<br>里程 / 急加速 / 时段 / 路线</div></th>
+          <td><div class="cell" data-p="p1" style="--pc:var(--p1);"><span class="ptag">P1 · UBI</span><b>从车风险评分 200–997</b><span>4 项可解释指标直接入费率，模拟测算十分位赔付率差 3.9×</span></div></td>
+          <td><div class="cell" data-p="p2" style="--pc:var(--p2);"><span class="ptag">P2</span><b>出险时刻行车核验</b><span>报案时间 × 行车数据交叉验证，欺诈识别</span></div></td>
+          <td><div class="cell" data-p="p1" style="--pc:var(--p1);"><span class="ptag">P1 · UBI</span><b>驾驶健康分 + 用车周报</b><span>车主 App 内触达，正向引导驾驶行为</span></div></td>
+          <td><div class="cell" data-p="p2" style="--pc:var(--p2);"><span class="ptag">P2</span><b>真实工况场景库</b><span>城市工况回流，标定与能耗优化</span></div></td>
+        </tr>
+        <tr>
+          <th><div class="dn">充电与三电</div><div class="ds">BMS · 充电会话<br>温度 / SOC / 功率</div></th>
+          <td><div class="cell" data-p="p1" style="--pc:var(--p1);"><span class="ptag">P1 · UBI</span><b>电池健康风险因子</b><span>快充占比 + 温度异常进入评分，预判三电出险</span></div></td>
+          <td><div class="cell" data-p="p2" style="--pc:var(--p2);"><span class="ptag">P2</span><b>热失控预警与责任界定</b><span>BMS 时序回放，区分质量责任与使用责任</span></div></td>
+          <td><div class="cell" data-p="p1" style="--pc:var(--p1);"><span class="ptag">P1 · UBI</span><b>充电养护建议</b><span>降低非正常衰减，延长质保期电池寿命</span></div></td>
+          <td><div class="cell" data-p="p2" style="--pc:var(--p2);"><span class="ptag">P2</span><b>三电标定优化</b><span>真实充电行为分布反哺 BMS 策略</span></div></td>
+        </tr>
+        <tr>
+          <th><div class="dn">ADAS 辅助驾驶</div><div class="ds">AEB / LKA / ACC<br>功能开启与触发事件</div></th>
+          <td><div class="cell" data-p="p2" style="--pc:var(--p2);"><span class="ptag">P2</span><b>ADAS 使用率风险修正</b><span>功能常开车辆出险率显著更低，给予费率优待</span></div></td>
+          <td><div class="cell" data-p="p2" style="--pc:var(--p2);"><span class="ptag">P2</span><b>预警事件链还原</b><span>碰撞前 AEB/FCW 触发序列，厘清事故成因</span></div></td>
+          <td><div class="cell" data-p="p2" style="--pc:var(--p2);"><span class="ptag">P2</span><b>安全功能使用引导</b><span>识别「买而不用」，App 内教育激活</span></div></td>
+          <td><div class="cell" data-p="p2" style="--pc:var(--p2);"><span class="ptag">P2</span><b>功能触发场景库</b><span>误触发 / 漏触发场景回流，迭代感知算法</span></div></td>
+        </tr>
+        <tr>
+          <th><div class="dn">智驾 L3+</div><div class="ds">准 L3 及以上 · 智驾状态机<br>接管 / ODD / MRC</div></th>
+          <td><div class="cell" data-p="p3" style="--pc:var(--p3);"><span class="ptag">P3 · 专题</span><b>智驾风险评价模型</b><span>人驾 / 系统驾 / 切换三通道风险，<a href="ad-risk-training.html" target="_blank" rel="noopener">见训练体系专题 →</a></span></div></td>
+          <td><div class="cell" data-p="p3" style="--pc:var(--p3);"><span class="ptag">P3</span><b>智驾事故责任判定</b><span>系统激活状态 + 接管时序，人车责任划分依据</span></div></td>
+          <td><div class="cell" data-p="p3" style="--pc:var(--p3);"><span class="ptag">P3</span><b>用户智驾分与 ODD 透明化</b><span>让用户理解何时可用、用得多好</span></div></td>
+          <td><div class="cell" data-p="p3" style="--pc:var(--p3);"><span class="ptag">P3</span><b>接管场景挖掘</b><span>高频接管点位 = 算法迭代优先级清单</span></div></td>
+        </tr>
+        <tr>
+          <th><div class="dn">影像与事故</div><div class="ds">行车记录 · EDR · 哨兵<br>碰撞信号 / 图像</div></th>
+          <td><div class="cell" data-p="p2" style="--pc:var(--p2);"><span class="ptag">P2</span><b>事故历史风险回写</b><span>已决事故特征回流评分模型，闭环验证</span></div></td>
+          <td><div class="cell" data-p="p2" style="--pc:var(--p2);"><span class="ptag">P2</span><b>图像远程定损 + 碰撞还原</b><span>EDR 5 秒时序 + 多视角影像，定损上门率 −40%</span></div></td>
+          <td><div class="cell" data-p="p2" style="--pc:var(--p2);"><span class="ptag">P2</span><b>维修线索闭环</b><span>事故识别 → 推送授权 4S 维修，留住售后产值</span></div></td>
+          <td><div class="cell" data-p="p3" style="--pc:var(--p3);"><span class="ptag">P3</span><b>碰撞安全验证</b><span>真实碰撞形态库，反哺车身结构设计</span></div></td>
+        </tr>
+        <tr>
+          <th><div class="dn">座舱与用户生态</div><div class="ds">车机使用 · 服务消费<br>会员 / 出行偏好</div></th>
+          <td><div class="cell" data-p="p3" style="--pc:var(--p3);"><span class="ptag">P3</span><b>续保倾向与用户分层</b><span>用车深度 × 服务粘性，预测续保与流失</span></div></td>
+          <td><div class="cell" data-p="p2" style="--pc:var(--p2);"><span class="ptag">P2</span><b>一键报案自动化</b><span>碰撞触发 → 车机引导报案，资料自动归集</span></div></td>
+          <td><div class="cell" data-p="p3" style="--pc:var(--p3);"><span class="ptag">P3</span><b>车载端体验优化</b><span>车机数据分析消费体验，服务推荐进座舱</span></div></td>
+          <td><div class="cell" data-p="p3" style="--pc:var(--p3);"><span class="ptag">P3</span><b>座舱交互迭代</b><span>高频路径与放弃率分析，定义下代 HMI</span></div></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="legend">
+    <span><i style="background:var(--p1);"></i>P1 · UBI 突破口（建议首先启动）</span>
+    <span><i style="background:var(--p2);"></i>P2 · 理赔智能化 + ADAS（12–36 个月）</span>
+    <span><i style="background:var(--p3);"></i>P3 · 智驾 + 生态（24–48 个月）</span>
+    <span style="color:var(--ink3);">全部能力均为规划项，数字为示意测算，以试点实测为准</span>
+  </div>
+
+  <!-- base layer -->
+  <div class="base">
+    <div class="bt"><b>P0 · 数据治理与合规底座</b><span>贯穿三个阶段 · 先行启动</span></div>
+    <ul>
+      <li><b>分级授权</b>车主知情同意 · 按场景最小化取数</li>
+      <li><b>隐私脱敏</b>VIN/轨迹去标识化 · 聚合优先</li>
+      <li><b>数据不出域</b>模型进主机厂域内计算，结果出域</li>
+      <li><b>口径统一</b>信号字典 · 跨车型/版本对齐</li>
+      <li><b>审计留痕</b>取数/用数全程可审计、可追溯</li>
+    </ul>
+  </div>
+
+  <!-- timeline -->
+  <h2>分阶段实施路线</h2>
+  <div class="h2sub">每一阶段都以「保险侧可验证的业务结果」作为里程碑 —— 时间为建议区间（以 48 个月为全尺度），阶段允许交叠并行，以双方合规评审与商务约定为准</div>
+  <div class="tl">
+    <div class="tl-track">
+      <div class="tl-lane"><i style="left:0; width:12.5%; background:var(--p0);"></i></div>
+      <div class="tl-lane"><i style="left:12.5%; width:37.5%; background:var(--p1);"></i></div>
+      <div class="tl-lane"><i style="left:25%; width:50%; background:var(--p2);"></i></div>
+      <div class="tl-lane"><i style="left:50%; width:50%; background:var(--p3);"></i></div>
+      <div class="tl-scale"><span>0</span><span>12 个月</span><span>24 个月</span><span>36 个月</span><span>48 个月</span></div>
+    </div>
+    <div class="tl-cols">
+      <div class="tl-col" style="--pc:var(--p0);">
+        <div class="tno">P0 · 0–6 个月（建议）</div>
+        <b>治理底座</b>
+        <ul><li>数据授权与合规框架</li><li>信号字典与口径对齐</li></ul>
+        <span class="kpi">里程碑：合规评审通过</span>
+      </div>
+      <div class="tl-col" style="--pc:var(--p1);">
+        <div class="tno">P1 · 6–24 个月（建议）</div>
+        <b>UBI 从车风险 <span class="tw">（建议首先启动）</span></b>
+        <ul><li>上海 248 辆小规模起步，端到端跑通</li><li>与历史赔案回测验证区分度</li><li>评分进入续保定价试运行</li></ul>
+        <span class="kpi">里程碑：赔付率区分度回测报告（目标 3×+）</span>
+      </div>
+      <div class="tl-col" style="--pc:var(--p2);">
+        <div class="tno">P2 · 12–36 个月（建议）</div>
+        <b>理赔智能化 + ADAS</b>
+        <ul><li>图像远程定损 · 碰撞事故还原</li><li>维修线索闭环进入 4S 体系</li><li>ADAS 使用率进入费率因子</li></ul>
+        <span class="kpi">里程碑：案均定损时效 −50%（示意目标）</span>
+      </div>
+      <div class="tl-col" style="--pc:var(--p3);">
+        <div class="tno">P3 · 24–48 个月（建议）</div>
+        <b>智驾风险 + 生态运营</b>
+        <ul><li>L3+ 智驾风险评价模型嵌入智驾服务体系</li><li>智驾保险产品创新（按激活时长/ODD 计价）</li><li>座舱体验优化与用户分层运营</li></ul>
+        <span class="kpi">里程碑：智驾保险产品申报上市</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="foot">
+    <div class="fi"><b>为什么从 UBI 切入？</b><br>UBI 只需行车 + 充电两个数据域，授权门槛最低、保险侧验证最快（一个续保周期即可看见赔付率区分），是用最小数据换最快可见价值的杠杆点。</div>
+    <div class="fi"><b>集团视角的递进逻辑</b><br>P1 证明「数据能看见风险」→ P2 证明「数据能降本增收（理赔 + 售后产值）」→ P3 证明「数据能定义新产品（智驾保险 + 体验）」，每一步都为下一步的数据开放积累信任。</div>
+    <div class="fi"><b>被认可之后的下一步</b><br>每个能力格最终都落为对数据湖的「特征级需求」：原始数据留在集团数据湖内加工，只出能直接喂给平台产品的最终特征 — 逐项口径见《<a href="data-features.html" style="color:var(--red);">数据特征需求清单</a>》。</div>
+    <div class="fi"><b>边界声明</b><br>本图为鑫安 × 一汽场景的规划框架示意；各能力落地以双方数据合规评审与商务约定为准，全程数据不出主机厂域。</div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var phases = document.querySelectorAll('.phase');
+  phases.forEach(function(p){
+    p.addEventListener('click', function(){
+      var k = p.dataset.p;
+      var cur = document.body.dataset.f;
+      var next = (cur === k) ? 'all' : k;
+      document.body.dataset.f = next;
+      phases.forEach(function(q){ q.classList.toggle('on', q.dataset.p === next); });
+    });
+  });
+  document.body.dataset.f = 'all';
+  phases.forEach(function(q){ q.classList.remove('on'); });
+})();
+</script>
+</body>
+</html>

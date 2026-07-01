@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>准 L3+ 智驾风险评价模型训练体系 · 鑫安 × 一汽</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --red:#ED1C24; --red-soft:#FDE9EA;
+    --ink:#16202B; --ink2:#56636F; --ink3:#909AA6;
+    --bg:#EEF1F4; --line:#E4E8EE; --dark:#11161B;
+    --teal:#00778B; --green:#00AF66; --amber:#E1A300; --orange:#FF8200; --blue:#2A6FDB;
+    --mono:"IBM Plex Mono",monospace;
+  }
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  body{ font-family:"Noto Sans SC","PingFang SC","Microsoft YaHei",sans-serif; background:var(--bg); color:var(--ink); }
+  .wrap{ max-width:1560px; margin:0 auto; padding:0 40px 64px; }
+
+  .hero{ background:var(--dark); color:#fff; }
+  .hero-in{ max-width:1560px; margin:0 auto; padding:46px 40px 38px; }
+  .hero-top{ display:flex; gap:48px; align-items:flex-end; justify-content:space-between; }
+  .kicker{ display:flex; align-items:center; gap:16px; }
+  .kicker .bar{ width:9px; height:42px; background:var(--red); border-radius:3px; }
+  .kicker .t1{ font-size:21px; font-weight:900; letter-spacing:.06em; }
+  .kicker .t2{ font-size:13px; font-weight:600; color:#8C98A4; letter-spacing:.2em; margin-top:3px; }
+  .hero h1{ font-size:44px; font-weight:900; line-height:1.28; margin-top:22px; }
+  .hero h1 em{ font-style:normal; color:var(--red); }
+  .hero .sub{ font-size:17px; color:#AEB8C2; margin-top:14px; line-height:1.7; max-width:860px; }
+  .hero .sub b{ color:#fff; }
+  .hero-side{ flex:0 0 350px; background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.12); border-radius:16px; padding:20px 24px; }
+  .hero-side .ht{ font-size:13px; font-weight:800; color:var(--red); letter-spacing:.1em; margin-bottom:10px; }
+  .hero-side p{ font-size:13.5px; line-height:1.7; color:#D7DDE3; }
+  .hero-side p b{ color:#fff; }
+  .qnav{ display:flex; gap:12px; margin-top:26px; flex-wrap:wrap; }
+  .qnav a{ display:flex; align-items:baseline; gap:10px; text-decoration:none; color:#fff; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.16); border-radius:999px; padding:10px 22px; font-size:15px; font-weight:700; transition:all .15s; white-space:nowrap; }
+  .qnav a:hover{ background:var(--red); border-color:var(--red); }
+  .qnav a small{ font-size:12px; font-weight:800; color:var(--red); letter-spacing:.08em; white-space:nowrap; }
+  .qnav a:hover small{ color:#fff; }
+  .polic{ margin-top:24px; display:flex; align-items:center; gap:0; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.1); border-radius:14px; padding:16px 24px; }
+  .polic .pe{ flex:1; display:flex; gap:13px; align-items:flex-start; }
+  .polic .pe + .pe{ border-left:1px dashed rgba(255,255,255,.18); padding-left:24px; margin-left:24px; }
+  .polic .pd{ font-size:14px; font-weight:900; color:var(--red); white-space:nowrap; font-variant-numeric:tabular-nums; }
+  .polic .pt{ font-size:13px; color:#D7DDE3; line-height:1.55; }
+  .polic .pt b{ color:#fff; }
+
+  h2{ font-size:25px; font-weight:900; margin:44px 0 6px; scroll-margin-top:20px; }
+  h2 .qtag{ display:inline-block; font-size:13px; font-weight:800; letter-spacing:.1em; color:#fff; background:var(--red); border-radius:7px; padding:4px 12px; vertical-align:4px; margin-right:12px; white-space:nowrap; }
+  .h2sub{ font-size:14.5px; color:var(--ink3); margin-bottom:20px; }
+  .card{ background:#fff; border:1px solid var(--line); border-radius:18px; box-shadow:0 1px 2px rgba(20,30,45,.05); }
+
+  /* ---- big picture ---- */
+  .bigline{ padding:30px 34px 26px; }
+  .bigline .def{ font-size:19px; font-weight:700; line-height:1.65; margin-bottom:24px; }
+  .bigline .def em{ font-style:normal; color:var(--red); font-weight:900; }
+  .prod{ display:grid; grid-template-columns:repeat(9, auto); grid-template-columns:1fr 30px 1fr 30px 1.06fr 30px 1fr 30px 1fr; align-items:stretch; }
+  .pnode{ border-radius:13px; padding:15px 17px; border:1.5px solid var(--line); background:var(--bg); }
+  .pnode .pk{ font-size:11.5px; font-weight:800; letter-spacing:.1em; color:var(--ink3); }
+  .pnode b{ display:block; font-size:16.5px; font-weight:900; margin-top:3px; }
+  .pnode span{ display:block; font-size:12.5px; color:var(--ink2); line-height:1.5; margin-top:5px; }
+  .pnode.hot{ background:var(--dark); border-color:var(--dark); color:#fff; }
+  .pnode.hot .pk{ color:var(--red); }
+  .pnode.hot span{ color:#AEB8C2; }
+  .parr{ display:grid; place-items:center; color:var(--ink3); }
+  .prodloop{ margin-top:14px; display:flex; align-items:center; gap:14px; background:var(--red-soft); border:1.5px dashed color-mix(in srgb, var(--red) 45%, transparent); border-radius:11px; padding:11px 18px; }
+  .prodloop .lt{ font-size:13.5px; font-weight:700; line-height:1.55; }
+  .prodloop .lt b{ color:var(--red); }
+
+  /* ---- inventory ---- */
+  .inv{ display:grid; grid-template-columns:1.05fr 1fr; gap:20px; align-items:stretch; }
+  .ladder{ padding:26px 30px; }
+  .ladder h3, .grades h3{ font-size:18px; font-weight:900; }
+  .ladder .h3s, .grades .h3s{ font-size:13px; color:var(--ink3); margin:4px 0 16px; }
+  .lrow{ display:grid; grid-template-columns:128px 1fr 120px; gap:16px; padding:13px 0; border-top:1px solid var(--line); align-items:center; }
+  .lrow:first-of-type{ border-top:none; }
+  .lrow .ln{ font-size:15.5px; font-weight:900; }
+  .lrow .ln small{ display:block; font-size:11px; color:var(--ink3); font-weight:600; margin-top:2px; letter-spacing:.04em; }
+  .lrow .ld{ font-size:13px; color:var(--ink2); line-height:1.55; }
+  .lrow .ld b{ color:var(--ink); }
+  .lvl{ font-size:12px; font-weight:800; text-align:center; padding:6px 8px; border-radius:999px; white-space:nowrap; }
+  .lv-l2{ background:#EAF1FB; color:var(--blue); }
+  .lv-l3{ background:var(--red-soft); color:var(--red); }
+  .lv-l4{ background:#E2F0F3; color:var(--teal); }
+  .lv-base{ background:var(--bg); color:var(--ink3); }
+  .focusband{ margin-top:14px; font-size:13px; font-weight:700; color:var(--red); background:var(--red-soft); border-radius:9px; padding:9px 14px; line-height:1.5; }
+  .grades{ padding:26px 30px; display:flex; flex-direction:column; }
+  .grade{ border:1.5px solid var(--line); border-radius:13px; padding:14px 18px; margin-bottom:12px; display:flex; gap:16px; }
+  .grade .gi{ flex:0 0 44px; height:44px; border-radius:12px; display:grid; place-items:center; font-size:18px; font-weight:900; color:#fff; }
+  .grade b{ display:block; font-size:15.5px; }
+  .grade b small{ font-size:12px; color:var(--ink3); font-weight:600; margin-left:8px; }
+  .grade .gs{ font-size:12.5px; color:var(--ink2); line-height:1.55; margin-top:3px; }
+  .grade .gtag{ display:inline-block; margin-top:7px; font-size:11.5px; font-weight:800; border-radius:999px; padding:3px 11px; }
+  .grade.a{ border-color:color-mix(in srgb, var(--green) 45%, transparent); }
+  .grade.a .gtag{ background:#E5F5EE; color:var(--green); }
+  .grade.b{ border-color:color-mix(in srgb, var(--amber) 50%, transparent); }
+  .grade.b .gtag{ background:#FBF3DC; color:#9A7000; }
+  .grade.c{ border-color:color-mix(in srgb, var(--red) 40%, transparent); margin-bottom:0; }
+  .grade.c .gtag{ background:var(--red-soft); color:var(--red); }
+  .invnote{ margin-top:14px; font-size:12.5px; color:var(--ink3); line-height:1.6; }
+
+  /* ---- three planes ---- */
+  .planes{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:20px; }
+  .plane{ padding:26px 28px; position:relative; overflow:hidden; }
+  .plane::before{ content:""; position:absolute; left:0; top:0; right:0; height:6px; background:var(--pc); }
+  .plane .pk{ font-size:12.5px; font-weight:800; letter-spacing:.12em; color:var(--pc); }
+  .plane b.t{ display:block; font-size:22px; font-weight:900; margin-top:6px; }
+  .plane .d{ font-size:14px; color:var(--ink2); line-height:1.65; margin-top:10px; }
+  .plane .feats{ margin-top:14px; display:flex; flex-wrap:wrap; gap:7px; }
+  .plane .feats span{ font-size:12px; font-weight:700; color:var(--pc); background:color-mix(in srgb, var(--pc) 8%, transparent); border:1px solid color-mix(in srgb, var(--pc) 28%, transparent); padding:4px 11px; border-radius:999px; white-space:nowrap; }
+  .plane .out{ margin-top:16px; padding-top:14px; border-top:1px dashed var(--line); font-size:13px; color:var(--ink2); }
+  .plane .out b{ color:var(--ink); }
+  .hand{ margin-top:20px; padding:24px 30px; display:flex; align-items:center; gap:26px; }
+  .hand .hd{ flex:0 0 230px; }
+  .hand .hd b{ font-size:17px; font-weight:900; display:block; }
+  .hand .hd span{ font-size:12.5px; color:var(--ink3); line-height:1.5; display:block; margin-top:4px; }
+  .hand svg{ flex:1; display:block; }
+
+  /* ---- pipeline ---- */
+  .pipe{ display:grid; grid-template-columns:repeat(5, 1fr); gap:0; }
+  .stage{ position:relative; padding:26px 26px 24px; }
+  .stage + .stage{ border-left:1px solid var(--line); }
+  .stage::after{ content:""; position:absolute; right:-9px; top:42px; width:16px; height:16px; border-top:2.5px solid var(--ink3); border-right:2.5px solid var(--ink3); transform:rotate(45deg); background:#fff; z-index:1; }
+  .stage:last-child::after{ display:none; }
+  .stage .no{ font-size:12px; font-weight:800; letter-spacing:.14em; color:var(--red); }
+  .stage b.t{ display:block; font-size:18.5px; font-weight:900; margin-top:5px; }
+  .stage ul{ list-style:none; margin-top:12px; }
+  .stage li{ font-size:13px; color:var(--ink2); line-height:1.6; padding-left:13px; position:relative; margin-bottom:6px; }
+  .stage li::before{ content:""; position:absolute; left:0; top:8px; width:5px; height:5px; border-radius:50%; background:var(--red); }
+  .stage li b{ color:var(--ink); }
+  .stage .io{ margin-top:10px; font-family:var(--mono); font-size:11px; color:var(--ink3); background:var(--bg); border:1px solid var(--line); border-radius:8px; padding:7px 10px; line-height:1.6; }
+  .prins{ margin-top:20px; display:grid; grid-template-columns:repeat(4,1fr); gap:16px; }
+  .prin{ padding:18px 20px; display:flex; gap:14px; align-items:flex-start; }
+  .prin .pi{ flex:0 0 40px; height:40px; border-radius:11px; display:grid; place-items:center; font-size:15px; font-weight:900; color:#fff; }
+  .prin b{ display:block; font-size:15px; line-height:1.35; }
+  .prin span{ display:block; font-size:12.5px; color:var(--ink2); line-height:1.55; margin-top:4px; }
+
+  /* ---- embed ---- */
+  .emb2{ display:grid; grid-template-columns:1fr 380px; gap:20px; align-items:stretch; }
+  .embed{ background:var(--dark); border-radius:18px; color:#fff; padding:26px 32px; }
+  .embed .et b{ font-size:19px; font-weight:900; display:block; }
+  .embed .et span{ font-size:13px; color:#8C98A4; line-height:1.6; display:block; margin-top:4px; }
+  .epts{ margin-top:18px; display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  .ep{ background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.13); border-radius:13px; padding:14px 17px; }
+  .ep .ek{ font-size:11.5px; font-weight:800; letter-spacing:.1em; color:var(--red); }
+  .ep b{ display:block; font-size:15px; margin-top:4px; }
+  .ep span{ display:block; font-size:12.5px; color:#AEB8C2; line-height:1.55; margin-top:4px; }
+  .outs{ padding:24px 28px; }
+  .outs h3{ font-size:17px; font-weight:900; margin-bottom:12px; }
+  .og{ border:1px solid var(--line); border-radius:13px; padding:12px 16px; background:var(--bg); display:flex; gap:14px; align-items:baseline; margin-bottom:10px; }
+  .og:last-child{ margin-bottom:0; }
+  .og .ov{ flex:0 0 86px; font-size:17px; font-weight:900; color:var(--red); font-variant-numeric:tabular-nums; }
+  .og b{ font-size:14px; }
+  .og span{ display:block; font-size:12px; color:var(--ink2); line-height:1.5; margin-top:2px; }
+
+  /* ---- 90 days ---- */
+  .go{ margin-top:20px; background:var(--dark); border-radius:18px; color:#fff; padding:28px 36px; display:flex; gap:30px; align-items:center; }
+  .go .gt{ flex:0 0 250px; }
+  .go .gt b{ font-size:20px; font-weight:900; display:block; }
+  .go .gt span{ font-size:13px; color:#8C98A4; line-height:1.6; display:block; margin-top:6px; }
+  .gsteps{ flex:1; display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+  .gs{ background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.13); border-radius:13px; padding:15px 18px; }
+  .gs .gk{ font-size:12px; font-weight:800; letter-spacing:.1em; color:var(--red); }
+  .gs b{ display:block; font-size:15.5px; margin-top:4px; }
+  .gs span{ display:block; font-size:12.5px; color:#AEB8C2; line-height:1.55; margin-top:4px; }
+  .punch{ margin-top:20px; font-size:21px; font-weight:900; color:#fff; background:var(--red); border-radius:14px; padding:18px 28px; line-height:1.45; display:flex; align-items:center; gap:16px; }
+  .punch .qm{ font-size:42px; opacity:.5; line-height:.6; }
+  .backlink{ margin-top:24px; font-size:13.5px; color:var(--ink2); }
+  .backlink a{ color:var(--red); font-weight:700; }
+</style>
+</head>
+<body>
+
+<div class="hero" data-screen-label="智驾专题 · 头图">
+  <div class="hero-in">
+    <div class="hero-top">
+      <div>
+        <div class="kicker">
+          <div class="bar"></div>
+          <div>
+            <div class="t1">鑫安汽车保险 × 一汽集团 · 智驾服务体系嵌入方案</div>
+            <div class="t2">LEXISNEXIS RISK SOLUTIONS · 数据战略 P3 专题 · <a href="strategy-map.html" style="color:inherit;">← 返回战略地图</a></div>
+          </div>
+        </div>
+        <h1>准 L3+ 智驾的<em>风险评价模型训练体系</em><br>是什么 · 怎么建 · 嵌哪里</h1>
+        <div class="sub">回应集团提出的命题：<b>「针对智驾（非传统 ADAS、准 L3 以上）的风险评价模型训练体系，希望有一个输出，以便尽快推动嵌入主机厂智驾服务体系。」</b>本专题给出可讨论、可启动的完整框架 — 从今天就能确认的数据清单开始。</div>
+      </div>
+      <div class="hero-side">
+        <div class="ht">为什么传统 UBI 不够用</div>
+        <p>同一辆车、同一条路：智驾激活时的急加速是<b>系统标定问题</b>（按版本归因），人驾时是<b>驾驶习惯问题</b>（按人归因）；而智驾相关事故高度集中在<b>接管前后的几秒钟</b>* — 必须把人驾、系统驾、切换过程分成三个通道分别建模。<br><br><span style="font-size:11.5px;color:#8C98A4;">* 行业研究典型规律，量级示意；以试点实测为准</span></p>
+      </div>
+    </div>
+    <div class="qnav">
+      <a href="#inv"><small>起点</small>智驾功能与数据开放盘点</a>
+      <a href="#q1"><small>问一</small>训练体系是什么</a>
+      <a href="#q2"><small>问二</small>训练体系怎么建</a>
+      <a href="#q3"><small>问三</small>嵌入智驾服务体系哪里</a>
+    </div>
+    <div class="polic">
+      <div class="pe"><div class="pd">2024.06</div><div class="pt">工信部等四部门公布首批 9 家 L3 准入与上路通行试点联合体，<b>一汽集团位列其中</b>（使用主体：一汽出行）</div></div>
+      <div class="pe"><div class="pd">2025.12</div><div class="pt">首批 L3 车型准入许可发放（长安深蓝、北汽极狐），北京/重庆限定路段 — <b>一汽等七家在「准生」通道</b></div></div>
+      <div class="pe"><div class="pd">2026</div><div class="pt">L3 试点上路 + 智驾险试点推进，保险与责任法规同步完善 — <b>风险评价体系的窗口期就是现在</b></div></div>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <!-- ============ 管理层一张图 ============ -->
+  <h2>先看一张图：训练体系到底是一条什么「生产线」</h2>
+  <div class="h2sub">一句话：把智驾风险变得「可观测 → 可归因 → 可定价」的数据生产线，并且每次 OTA 后自动重新学习</div>
+  <div class="card bigline" data-screen-label="管理层一张图">
+    <div class="def">它不是一个一次性建好的模型，而是一条<em>持续运转的生产线</em>：左边进智驾数据，右边出费率因子、发版风险评估和用户智驾分 — 软件每升一版，体系自动重评一次。</div>
+    <div class="prod">
+      <div class="pnode">
+        <div class="pk">投料</div>
+        <b>① 数据盘点与接入</b>
+        <span>按 A/B/C 三级可得性签数据清单，与 UBI 共用接入管线</span>
+      </div>
+      <div class="parr"><svg width="20" height="20" viewBox="0 0 26 26" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 13h18M14 6l7 7-7 7"/></svg></div>
+      <div class="pnode">
+        <div class="pk">加工</div>
+        <b>② 场景库与责任标注</b>
+        <span>事件切片入库，按「人 / 系统 / 混合」三类归因标注</span>
+      </div>
+      <div class="parr"><svg width="20" height="20" viewBox="0 0 26 26" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 13h18M14 6l7 7-7 7"/></svg></div>
+      <div class="pnode hot">
+        <div class="pk">核心</div>
+        <b>③ 三通道风险模型</b>
+        <span>人驾 / 系统驾 / 切换分别建模 — 风险跟着「谁在开」走</span>
+      </div>
+      <div class="parr"><svg width="20" height="20" viewBox="0 0 26 26" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 13h18M14 6l7 7-7 7"/></svg></div>
+      <div class="pnode">
+        <div class="pk">质检</div>
+        <b>④ 影子验证与回归</b>
+        <span>新版本先并行打分不生效，与赔案回测后才进费率</span>
+      </div>
+      <div class="parr"><svg width="20" height="20" viewBox="0 0 26 26" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 13h18M14 6l7 7-7 7"/></svg></div>
+      <div class="pnode">
+        <div class="pk">出货</div>
+        <b>⑤ 嵌入智驾服务体系</b>
+        <span>费率因子 · OTA 发版评估 · 用户智驾分 · 责任判定依据</span>
+      </div>
+    </div>
+    <div class="prodloop">
+      <svg width="26" height="26" viewBox="0 0 30 30" fill="none" stroke="#ED1C24" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M25 15a10 10 0 1 1-3-7.1"/><path d="M25 4v5h-5"/></svg>
+      <div class="lt">闭环是关键：<b>OTA 发版 → 新数据回流 → 自动重训重评</b>。智驾能力随软件版本跳变，「训练体系」的本质是持续重学的机制，而不是某一个模型本身 — 这正是它必须嵌入主机厂智驾服务体系、而不能放在体系外的原因。</div>
+    </div>
+  </div>
+
+  <!-- ============ 起点 · 盘点 ============ -->
+  <h2 id="inv"><span class="qtag">起点</span>智驾功能与数据开放盘点 — 和一汽一起回答「现在手里有什么」</h2>
+  <div class="h2sub">客户与我们都在探索期 · 最务实的第一步不是建模，而是把「哪些功能、能开放哪些信号」盘成一张可签字的清单</div>
+  <div class="inv" data-screen-label="起点盘点">
+    <div class="card ladder">
+      <h3>一汽红旗「司南智驾」功能阶梯</h3>
+      <div class="h3s">基于公开发布资料整理（2026.6）· 具体配置与节奏以一汽智驾部门确认为准</div>
+      <div class="lrow">
+        <div class="ln">传统 ADAS<small>全系标配</small></div>
+        <div class="ld">AEB / LKA / ACC 等单点功能 — 作为风险<b>对照基线</b>，沿用 P2 阶段 ADAS 数据域</div>
+        <span class="lvl lv-base">L1–L2 · 对照组</span>
+      </div>
+      <div class="lrow">
+        <div class="ln">司南 100</div>
+        <div class="ld">高速 NOA 领航 + 记忆通勤（百公里级城市记忆路线）</div>
+        <span class="lvl lv-l2">L2+ · 人在环</span>
+      </div>
+      <div class="lrow">
+        <div class="ln">司南 500<small>标准 / 进阶</small></div>
+        <div class="ld">城市 NOA · 车位到车位；进阶版增加激光雷达，<b>接管率显著下降</b> — 已是「准 L3」形态的人机共驾</div>
+        <span class="lvl lv-l3">准 L3 · 重点</span>
+      </div>
+      <div class="lrow">
+        <div class="ln">司南 1000<small>标准</small></div>
+        <div class="ld">端到端 + VLA 大模型 · 全冗余架构 · <b>面向 L3 标准设计</b> — 责任开始向系统迁移</div>
+        <span class="lvl lv-l3">L3 · 重点</span>
+      </div>
+      <div class="lrow">
+        <div class="ln">司南 1000<small>进阶</small></div>
+        <div class="ld">特定区域高度自动驾驶探索 — 远期对应产品责任险逻辑</div>
+        <span class="lvl lv-l4">L4 探索 · 远期</span>
+      </div>
+      <div class="focusband">建模重点 = 司南 500 / 1000 所覆盖的「准 L3」人机共驾区间 — 责任最模糊、数据最关键、保险价值最大。</div>
+    </div>
+    <div class="card grades">
+      <h3>车端信号的三级可得性 — 决定起步速度</h3>
+      <div class="h3s">不要等「全部数据」：A 级签清单就能动，B/C 级随合作深化逐级解锁</div>
+      <div class="grade a">
+        <div class="gi" style="background:var(--green);">A</div>
+        <div>
+          <b>整车 CAN 即可得<small>明天就能谈</small></b>
+          <div class="gs">智驾功能激活/退出状态 · 车速与驾驶员操作 · AEB/FCW 触发事件 · 里程与时段 — 多数信号已在 UBI 接入管线口径内</div>
+          <span class="gtag">解锁：通道 A 人驾风险 + 智驾暴露度统计</span>
+        </div>
+      </div>
+      <div class="grade b">
+        <div class="gi" style="background:var(--amber);">B</div>
+        <div>
+          <b>智驾域控日志<small>需接口协作</small></b>
+          <div class="gs">接管请求 TOR 时序 · ODD 进出事件 · MRC 最小风险策略触发 · 脱手/分神监测（DMS）— L3 准入法规本就要求记录</div>
+          <span class="gtag">解锁：通道 C 切换风险 + 版本×场景矩阵骨架</span>
+        </div>
+      </div>
+      <div class="grade c">
+        <div class="gi" style="background:var(--red);">C</div>
+        <div>
+          <b>研发深度协作<small>联合建模</small></b>
+          <div class="gs">感知置信度与传感器降级 · 事件前后 30s 场景切片 · EDR / 影像数据 — 与智驾研发的数采-标注体系共用基建</div>
+          <span class="gtag">解锁：通道 B 系统驾风险全量 + 责任判定依据</span>
+        </div>
+      </div>
+      <div class="invnote">给管理层的判断：<b>起步不需要新开发车端能力</b> — A 级信号现在就有；B 级是 L3 法规的既有要求；只有 C 级需要研发侧投入。数据清单可以按 A→B→C 分三次签。</div>
+    </div>
+  </div>
+
+  <!-- ============ 问一 ============ -->
+  <h2 id="q1"><span class="qtag">问一</span>训练体系是什么 — 三通道风险结构</h2>
+  <div class="h2sub">同一段行程按「谁在开」切分为三个风险面，分别建模、统一输出到 200–997 同尺度评分　　* 「在环」即 in-the-loop：指此刻由谁闭合「感知→决策→操作」的驾驶控制回路，风险就归因到谁</div>
+  <div class="planes" data-screen-label="三通道结构">
+    <div class="card plane" style="--pc:var(--blue);">
+      <div class="pk">通道 A · 人驾风险</div>
+      <b class="t">人在开 <small style="font-size:13px; font-weight:700; color:var(--ink3);">驾驶员在环 *</small></b>
+      <div class="d">UBI 从车评分的自然延伸：智驾未激活里程沿用 4 项指标体系，口径与现有平台一致、模型资产直接复用。</div>
+      <div class="feats"><span>里程暴露</span><span>急加速/急转</span><span>快充/温度</span><span>时段与路线</span></div>
+      <div class="out">输出 → <b>人驾风险分</b>（与现行从车评分同尺度 200–997）</div>
+    </div>
+    <div class="card plane" style="--pc:var(--teal);">
+      <div class="pk">通道 B · 系统驾风险</div>
+      <b class="t">系统在开 <small style="font-size:13px; font-weight:700; color:var(--ink3);">智驾系统在环 *</small></b>
+      <div class="d">风险归因到「软件版本 × ODD 场景」而非个人：同一版本在同类场景的群体表现，才是系统风险的正确统计单元。</div>
+      <div class="feats"><span>版本号分层</span><span>ODD 内/外</span><span>MPI 接管间隔</span><span>MRC 触发率</span><span>传感器置信度</span></div>
+      <div class="out">输出 → <b>版本×场景风险矩阵</b>（每次 OTA 后重新评估）</div>
+    </div>
+    <div class="card plane" style="--pc:var(--orange);">
+      <div class="pk">通道 C · 切换风险</div>
+      <b class="t">正在交接 <small style="font-size:13px; font-weight:700; color:var(--ink3);">人机接管过程</small></b>
+      <div class="d">接管请求到稳定控制的全过程：响应时延、接管时车速与车距余量、接管后 10 秒内的修正幅度 — 事故最密集的窗口。</div>
+      <div class="feats"><span>接管响应时延</span><span>脱手/分神时长</span><span>接管后修正幅度</span><span>ODD 边界预判</span></div>
+      <div class="out">输出 → <b>接管质量分</b>（人与系统配合度，双向归因）</div>
+    </div>
+  </div>
+
+  <div class="card hand">
+    <div class="hd">
+      <b>一段行程的责任切分</b>
+      <span>风险通道随驾驶状态机切换，秒级对齐遥测时间轴</span>
+    </div>
+    <svg viewBox="0 0 980 96" preserveAspectRatio="xMidYMid meet">
+      <defs>
+        <marker id="ah" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#909AA6"></path></marker>
+      </defs>
+      <rect x="0" y="34" width="200" height="22" rx="6" fill="#2A6FDB" opacity="0.85"></rect>
+      <rect x="204" y="34" width="60" height="22" rx="6" fill="#FF8200"></rect>
+      <rect x="268" y="34" width="330" height="22" rx="6" fill="#00778B" opacity="0.9"></rect>
+      <rect x="602" y="34" width="60" height="22" rx="6" fill="#FF8200"></rect>
+      <rect x="666" y="34" width="314" height="22" rx="6" fill="#2A6FDB" opacity="0.85"></rect>
+      <text x="100" y="49" font-size="13" fill="#fff" font-weight="700" text-anchor="middle">人驾 · 通道 A</text>
+      <text x="234" y="27" font-size="12" fill="#FF8200" font-weight="800" text-anchor="middle">激活交接</text>
+      <text x="433" y="49" font-size="13" fill="#fff" font-weight="700" text-anchor="middle">智驾激活（ODD 内）· 通道 B</text>
+      <text x="632" y="27" font-size="12" fill="#FF8200" font-weight="800" text-anchor="middle">接管请求</text>
+      <text x="823" y="49" font-size="13" fill="#fff" font-weight="700" text-anchor="middle">人驾（接管后）· 通道 A + C</text>
+      <line x1="0" y1="74" x2="980" y2="74" stroke="#E4E8EE" stroke-width="1.5"></line>
+      <text x="0" y="90" font-size="11.5" fill="#909AA6">07:42 出发</text>
+      <text x="234" y="90" font-size="11.5" fill="#909AA6" text-anchor="middle">高架入口 · 进入 ODD</text>
+      <text x="632" y="90" font-size="11.5" fill="#909AA6" text-anchor="middle">施工区 · ODD 边界 · TOR 提前 8s</text>
+      <text x="980" y="90" font-size="11.5" fill="#909AA6" text-anchor="end">08:31 到达</text>
+      <line x1="234" y1="58" x2="234" y2="70" stroke="#909AA6" stroke-width="1.5" marker-end="url(#ah)"></line>
+      <line x1="632" y1="58" x2="632" y2="70" stroke="#909AA6" stroke-width="1.5" marker-end="url(#ah)"></line>
+    </svg>
+  </div>
+
+  <!-- ============ 问二 ============ -->
+  <h2 id="q2"><span class="qtag">问二</span>训练体系怎么建 — 五阶段流水线 + 四条铁律</h2>
+  <div class="h2sub">数据 → 场景 → 模型 → 验证 → 嵌入，与主机厂智驾研发流程（数采-标注-回归）共用基建，不另起炉灶</div>
+  <div class="card pipe" data-screen-label="五阶段流水线">
+    <div class="stage">
+      <div class="no">阶段 ①</div>
+      <b class="t">数据采集与对齐</b>
+      <ul>
+        <li>按 <b>A/B/C 清单</b>分批接入（见上文盘点）</li>
+        <li><b>智驾状态机</b>：激活/退出/接管请求/MRC 全事件流</li>
+        <li>与 UBI 遥测共用接入管线，<b>秒级时间对齐</b></li>
+      </ul>
+      <div class="io">in: CAN/智驾域控日志<br>out: 统一时序事件流</div>
+    </div>
+    <div class="stage">
+      <div class="no">阶段 ②</div>
+      <b class="t">场景库与责任标注</b>
+      <ul>
+        <li>事件前后 30s <b>切片</b>，按场景分类（匝道/施工/cut-in…）</li>
+        <li>责任标注：<b>人 / 系统 / 混合</b> 三类归因</li>
+        <li>corner case 入库，持续扩充对抗集</li>
+      </ul>
+      <div class="io">in: 时序事件流<br>out: 带标注场景库</div>
+    </div>
+    <div class="stage">
+      <div class="no">阶段 ③</div>
+      <b class="t">三通道模型训练</b>
+      <ul>
+        <li>通道 A：沿用 UBI 因子体系（迁移，不重建）</li>
+        <li>通道 B：<b>版本 × ODD × 场景</b>分层回归</li>
+        <li>通道 C：接管过程序列模型（时延/余量/修正）</li>
+      </ul>
+      <div class="io">in: 场景库 + 标注<br>out: 三通道风险模型</div>
+    </div>
+    <div class="stage">
+      <div class="no">阶段 ④</div>
+      <b class="t">评价与验证</b>
+      <ul>
+        <li><b>影子模式</b>：新版本先并行打分不生效</li>
+        <li>OTA 回归：版本对比 + PSI 漂移监控</li>
+        <li>与已决赔案回测，<b>赔付率区分度</b>验收</li>
+      </ul>
+      <div class="io">in: 模型 + 新版本数据<br>out: 版本风险报告</div>
+    </div>
+    <div class="stage">
+      <div class="no">阶段 ⑤</div>
+      <b class="t">嵌入智驾服务体系</b>
+      <ul>
+        <li>智驾保险费率因子（按激活里程/ODD 计价）</li>
+        <li>OTA 发版风险评估前置</li>
+        <li>用户智驾分进入车主 App</li>
+      </ul>
+      <div class="io">in: 三通道评分<br>out: 费率/发版/运营接口</div>
+    </div>
+  </div>
+  <div class="prins">
+    <div class="card prin">
+      <div class="pi" style="background:var(--red);">版</div>
+      <div><b>按软件版本分层，OTA 即重评</b><span>智驾能力随 OTA 跳变，跨版本聚合会污染统计；每次发版触发影子评估。</span></div>
+    </div>
+    <div class="card prin">
+      <div class="pi" style="background:var(--teal);">域</div>
+      <div><b>ODD 内外严格区分</b><span>ODD 内看系统、ODD 外看人、边界看切换；混在一起的「智驾出险率」没有定价意义。</span></div>
+    </div>
+    <div class="card prin">
+      <div class="pi" style="background:var(--orange);">序</div>
+      <div><b>时序行为优先于静态标签</b><span>接管质量看连续过程，而非「是否发生接管」的一次性标记。</span></div>
+    </div>
+    <div class="card prin">
+      <div class="pi" style="background:var(--blue);">基</div>
+      <div><b>与 UBI 平台共用数据底座</b><span>接入、清洗、合规域内计算全部复用 P1 基建 — 智驾模型是扩展，不是另起炉灶。</span></div>
+    </div>
+  </div>
+
+  <!-- ============ 问三 ============ -->
+  <h2 id="q3"><span class="qtag">问三</span>嵌入智驾服务体系哪里 — 四个挂点 + 固定交付物</h2>
+  <div class="h2sub">不改变主机厂现有研发与服务流程，以接口方式挂载；每个挂点对应一类固定交付物</div>
+  <div class="emb2" data-screen-label="嵌入挂点">
+    <div class="embed">
+      <div class="et">
+        <b>嵌入一汽智驾服务体系的四个挂点</b>
+        <span>体系建在保险侧，挂点接在主机厂侧 — 双向受益、互不侵入</span>
+      </div>
+      <div class="epts">
+        <div class="ep"><div class="ek">研发侧</div><b>数采与回归平台</b><span>场景库与责任标注与智驾研发共用，高频接管点位 = 算法迭代优先级清单</span></div>
+        <div class="ep"><div class="ek">发版侧</div><b>OTA 发布流程</b><span>风险影子评估作为发版检查项之一，发版后 30 天追踪</span></div>
+        <div class="ep"><div class="ek">服务侧</div><b>智驾订阅与保险</b><span>费率因子接入智驾订阅 / 智驾保险产品定价（按激活里程 / ODD 计价）</span></div>
+        <div class="ep"><div class="ek">用户侧</div><b>车主 App</b><span>用户智驾分与 ODD 透明化 — 让用户知道何时可用、用得多好，建立信任</span></div>
+      </div>
+    </div>
+    <div class="card outs">
+      <h3>固定交付物</h3>
+      <div class="og"><div class="ov">SDI</div><div><b>智驾安全指数</b><span>版本 × 车系级综合指数，集团管理层月度视图</span></div></div>
+      <div class="og"><div class="ov">200–997</div><div><b>三通道风险评分</b><span>人驾 / 系统驾 / 切换，与从车评分同尺度</span></div></div>
+      <div class="og"><div class="ov">每版本</div><div><b>OTA 风险回归报告</b><span>发版前影子评估 + 发版后 30 天追踪</span></div></div>
+      <div class="og"><div class="ov">API</div><div><b>智驾保险费率因子</b><span>按激活里程 / ODD 场景计价的精算接口</span></div></div>
+    </div>
+  </div>
+
+  <!-- ============ 起步 ============ -->
+  <div class="go" data-screen-label="90天起步">
+    <div class="gt">
+      <b>从明天开始的 90 天</b>
+      <span>不等全部数据、不等法规完备 — 用 A 级信号先把生产线跑起来。数据准备与 P1 并行预埋，费率应用待 P3 窗口正式启用</span>
+    </div>
+    <div class="gsteps">
+      <div class="gs"><div class="gk">第 1–30 天</div><b>签 A 级数据清单</b><span>与一汽智驾部门确认司南功能阶梯与 A 级信号口径，纳入既有 UBI 合规框架</span></div>
+      <div class="gs"><div class="gk">第 30–60 天</div><b>影子接入跑通</b><span>智驾激活状态 + 暴露度统计上线从车风险数据平台「智驾风险」模块</span></div>
+      <div class="gs"><div class="gk">第 60–90 天</div><b>首版基线报告</b><span>人驾 vs 智驾暴露与事件率基线 + B/C 级数据解锁路线图，提交双方管理层</span></div>
+    </div>
+  </div>
+
+  <div class="punch"><span class="qm">“</span>谁先把智驾风险讲清楚，谁就拿到下一个十年的定价权 — 而讲清楚的前提，是先把训练体系建在数据长出来的地方。</div>
+
+  <div class="backlink">← 返回 <a href="strategy-map.html">数据战略全景地图</a> · <a href="platform.html">从车风险数据平台</a> · <a href="product-deck.html">UBI 产品说明</a> · 本专题对应 P3 阶段「智驾 L3+ × 风险定价」能力格 · 功能信息基于公开资料整理，以一汽确认为准</div>
+</div>
+
+</body>
+</html>

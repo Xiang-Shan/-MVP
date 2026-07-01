@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>UBI 从车风险数据平台 · 产品说明</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --red:#ED1C24; --red-soft:#FDE9EA;
+    --ink:#16202B; --ink2:#56636F; --ink3:#909AA6;
+    --bg:#F4F6F9; --line:#E4E8EE; --dark:#11161B;
+    --teal:#00778B; --green:#00AF66; --amber:#E1A300; --orange:#FF8200; --blue:#2A6FDB;
+  }
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  body{ font-family:"Noto Sans SC","PingFang SC","Microsoft YaHei",sans-serif; background:#000; }
+  deck-stage:not(:defined){ visibility:hidden; }
+  section{ background:var(--bg); color:var(--ink); font-size:24px; }
+  .slide-pad{ position:absolute; inset:0; padding:64px 96px 56px; display:flex; flex-direction:column; }
+
+  .kicker{ display:flex; align-items:center; gap:18px; }
+  .kicker .bar{ width:10px; height:46px; background:var(--red); border-radius:3px; }
+  .kicker .t1{ font-size:26px; font-weight:900; letter-spacing:.08em; }
+  .kicker .t2{ font-size:17px; font-weight:600; color:var(--ink3); letter-spacing:.22em; margin-top:4px; }
+  .pagehead{ display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:30px; }
+  .pagehead h1{ font-size:60px; font-weight:900; letter-spacing:.01em; line-height:1.15; margin-top:16px; }
+  .pagehead h1 em{ font-style:normal; color:var(--red); }
+  .pagehead .sub{ font-size:23px; color:var(--ink2); margin-top:10px; font-weight:500; }
+  .pageno{ font-size:18px; color:var(--ink3); font-weight:700; letter-spacing:.1em; text-align:right; white-space:nowrap; }
+
+  .card{ background:#fff; border:1px solid var(--line); border-radius:18px; }
+  .demonote{ position:absolute; left:96px; bottom:22px; font-size:14.5px; color:var(--ink3); }
+  .demonote b{ color:var(--ink2); }
+
+  image-slot{ display:block; }
+
+  /* ---------- slide 1 ---------- */
+  .s1-body{ flex:1; display:grid; grid-template-columns:600px 1fr; gap:36px; min-height:0; }
+  .flow{ display:flex; flex-direction:column; padding:26px 36px; gap:0; }
+  .flow h3{ font-size:25px; font-weight:900; margin-bottom:6px; }
+  .flow .note{ font-size:17px; color:var(--ink3); margin-bottom:20px; }
+  .fnode{ border-radius:14px; padding:17px 24px; display:flex; align-items:center; gap:18px; }
+  .fnode .tag{ font-size:15px; font-weight:800; letter-spacing:.12em; padding:5px 13px; border-radius:999px; white-space:nowrap; }
+  .fnode .big{ font-size:23px; font-weight:800; }
+  .fnode .sm{ font-size:16.5px; color:var(--ink2); margin-top:3px; line-height:1.45; }
+  .farrow{ display:flex; align-items:center; gap:14px; padding:9px 0 9px 30px; color:var(--ink3); font-size:16.5px; font-weight:600; }
+  .farrow svg{ flex:0 0 auto; }
+  .n-oem{ background:#EAF1FB; border:1.5px solid #C8D9F2; }
+  .n-oem .tag{ background:var(--blue); color:#fff; }
+  .n-core{ background:var(--dark); color:#fff; }
+  .n-core .tag{ background:var(--red); color:#fff; }
+  .n-core .sm{ color:#AEB8C2; }
+  .n-out{ background:var(--red-soft); border:1.5px solid #F6C3C5; }
+  .n-out .tag{ background:var(--red); color:#fff; }
+  .n-out2{ background:#E5F5EE; border:1.5px solid #BFE5D2; }
+  .n-out2 .tag{ background:var(--green); color:#fff; }
+
+  .mods{ display:flex; flex-direction:column; gap:9px; }
+  .mod-group{ display:grid; grid-template-columns:150px 1fr; gap:0; padding:10px 24px; align-items:start; }
+  .mod-group .g-name{ font-size:19px; font-weight:900; color:var(--red); letter-spacing:.03em; padding-top:9px; }
+  .mod-group .g-name small{ display:block; font-size:13px; color:var(--ink3); font-weight:600; margin-top:5px; letter-spacing:.06em; }
+  .mod-items{ display:grid; grid-template-columns:repeat(3, 1fr); gap:10px; }
+  .mod{ background:var(--bg); border:1px solid var(--line); border-radius:12px; padding:10px 13px; }
+  .mod b{ font-size:17px; display:block; }
+  .mod span{ font-size:13.5px; color:var(--ink2); line-height:1.4; display:block; margin-top:3px; }
+  .statbar{ margin-top:14px; background:var(--dark); border-radius:18px; color:#fff; display:flex; align-items:center; padding:19px 48px; gap:0; }
+  .stat{ flex:1; text-align:center; }
+  .stat + .stat{ border-left:1px solid rgba(255,255,255,.14); }
+  .stat .v{ font-size:38px; font-weight:900; font-variant-numeric:tabular-nums; }
+  .stat .v em{ font-style:normal; color:var(--red); }
+  .stat .l{ font-size:16px; color:#AEB8C2; margin-top:4px; }
+
+  /* ---------- slide 2 · 车队管理 ---------- */
+  .fleet-body{ flex:1; display:grid; grid-template-columns:1fr 520px; gap:32px; min-height:0; }
+  .fleet-shot{ background:#E9EDF2; border:1px solid var(--line); border-radius:16px; overflow:hidden; box-shadow:0 2px 12px rgba(20,30,45,.07); }
+  .fleet-shot image-slot{ width:100%; height:100%; }
+  .fleet-side{ display:flex; flex-direction:column; }
+  .fleet-side .fcap{ font-size:19px; font-weight:900; color:var(--red); letter-spacing:.02em; margin-bottom:6px; }
+  .frow{ display:flex; gap:18px; padding:14px 0; border-top:1px solid var(--line); align-items:flex-start; flex:1; }
+  .frow:first-of-type{ border-top:none; }
+  .frow .fn{ font-size:15px; font-weight:900; color:#fff; background:var(--red); border-radius:8px; width:34px; height:34px; display:flex; align-items:center; justify-content:center; flex:0 0 auto; letter-spacing:.02em; }
+  .frow b{ font-size:20.5px; display:block; }
+  .frow span{ font-size:15.5px; color:var(--ink2); line-height:1.5; display:block; margin-top:4px; }
+
+  /* ---------- slide 3 · 界面导览 ---------- */
+  .tour{ flex:1; display:grid; grid-template-columns:1fr 560px; gap:28px; min-height:0; }
+  .shot{ background:#fff; border:1px solid var(--line); border-radius:16px; overflow:hidden; display:flex; flex-direction:column; box-shadow:0 2px 12px rgba(20,30,45,.07); }
+  .shot .cap{ display:flex; align-items:baseline; gap:12px; padding:13px 20px; border-top:1px solid var(--line); }
+  .shot .cap b{ font-size:19px; font-weight:900; white-space:nowrap; }
+  .shot .cap span{ font-size:14.5px; color:var(--ink2); line-height:1.4; }
+  .shot .imgwrap{ flex:1; min-height:0; background:#E9EDF2; }
+  .shot .imgwrap image-slot{ width:100%; height:100%; }
+  .tour-hero .cap b{ font-size:22px; }
+  .tour-hero .cap b i{ font-style:normal; color:var(--red); }
+  .tour-grid{ display:grid; grid-template-columns:1fr 1fr; grid-template-rows:repeat(3, 1fr); gap:18px; min-height:0; }
+  .tour-grid .shot .cap{ padding:9px 14px; }
+  .tour-grid .shot .cap b{ font-size:15.5px; }
+  .tour-grid .shot .cap span{ font-size:12.5px; }
+
+  /* ---------- slide 4 · 三方价值 ---------- */
+  .s2-cols{ flex:1; display:grid; grid-template-columns:repeat(3, 1fr); gap:28px; min-height:0; }
+  .vcol{ padding:30px 34px; display:flex; flex-direction:column; }
+  .vcol .who{ display:flex; align-items:center; gap:14px; margin-bottom:8px; }
+  .vcol .who .dot{ width:16px; height:16px; border-radius:5px; }
+  .vcol .who b{ font-size:27px; font-weight:900; }
+  .vcol .for{ font-size:16px; color:var(--ink3); font-weight:600; letter-spacing:.08em; margin-bottom:18px; }
+  .vrow{ display:flex; gap:14px; padding:16px 0; border-top:1px solid var(--line); flex:1; align-items:flex-start; }
+  .vrow:first-of-type{ border-top:none; }
+  .vrow .vmark{ width:8px; height:8px; border-radius:50%; margin-top:11px; flex:0 0 auto; }
+  .vrow b{ font-size:21px; display:block; }
+  .vrow span{ font-size:16.5px; color:var(--ink2); line-height:1.55; display:block; margin-top:5px; }
+  .vhero{ margin:2px 0 14px; padding:18px 22px; border-radius:14px; display:flex; align-items:baseline; gap:12px; }
+  .vhero .n{ font-size:50px; font-weight:900; font-variant-numeric:tabular-nums; line-height:1; }
+  .vhero .d{ font-size:16.5px; line-height:1.4; color:var(--ink2); }
+
+  /* ---------- slide 5 · 路径 ---------- */
+  .s4-body{ flex:1; display:flex; flex-direction:column; gap:24px; min-height:0; }
+  .s4-path{ background:var(--dark); border-radius:18px; padding:34px 48px; color:#fff; display:flex; align-items:stretch; gap:0; flex:1; }
+  .step4{ flex:1; position:relative; padding:6px 34px; display:flex; flex-direction:column; }
+  .step4 + .step4{ border-left:1px dashed rgba(255,255,255,.22); }
+  .step4 .no{ font-size:16px; font-weight:800; color:var(--red); letter-spacing:.14em; }
+  .step4 b{ font-size:30px; display:block; margin-top:12px; }
+  .step4 ul{ list-style:none; margin-top:18px; }
+  .step4 li{ font-size:18.5px; color:#C8D0D8; line-height:1.65; padding-left:16px; position:relative; margin-bottom:14px; }
+  .step4 li::before{ content:""; position:absolute; left:0; top:11px; width:6px; height:6px; border-radius:50%; background:var(--red); }
+  .step4 li b{ display:inline; font-size:inherit; color:#fff; margin:0; }
+  .step4 .when{ display:inline-block; margin-top:14px; font-size:15px; font-weight:700; color:#fff; background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.2); padding:5px 16px; border-radius:999px; align-self:flex-start; }
+  .step4 .goal{ margin-top:auto; font-size:16.5px; font-weight:700; color:var(--red); background:rgba(237,28,36,.12); border-radius:9px; padding:11px 16px; }
+  .s4-strip{ display:grid; grid-template-columns:1.3fr 1fr 1fr; gap:24px; }
+  .gov{ padding:22px 28px; display:flex; gap:22px; align-items:flex-start; }
+  .gov .gt{ flex:0 0 auto; font-size:19px; font-weight:900; padding-top:2px; }
+  .gov .gt small{ display:block; font-size:13px; color:var(--ink3); font-weight:600; margin-top:3px; }
+  .gov ul{ list-style:none; display:grid; grid-template-columns:1fr 1fr; gap:6px 20px; flex:1; }
+  .gov li{ font-size:15.5px; color:var(--ink2); line-height:1.5; padding-left:14px; position:relative; }
+  .gov li::before{ content:""; position:absolute; left:0; top:9px; width:6px; height:6px; border-radius:50%; background:var(--red); }
+  .gov li b{ color:var(--ink); }
+  .nextdoc{ padding:22px 28px; display:flex; flex-direction:column; justify-content:center; gap:6px; text-decoration:none; transition:box-shadow .15s; }
+  .nextdoc:hover{ box-shadow:0 6px 20px rgba(20,30,45,.12); }
+  .nextdoc .nk{ font-size:13.5px; font-weight:800; letter-spacing:.12em; color:var(--red); }
+  .nextdoc b{ font-size:21px; font-weight:900; color:var(--ink); }
+  .nextdoc span{ font-size:15px; color:var(--ink2); line-height:1.5; }
+</style>
+</head>
+<body>
+
+<template id="__bundler_thumbnail" data-bg-color="#11161B">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+    <rect width="100" height="100" fill="#11161B"/>
+    <rect x="30" y="34" width="40" height="26" rx="4" fill="none" stroke="#ED1C24" stroke-width="4"/>
+    <path d="M36 54 L44 46 L52 50 L64 40" fill="none" stroke="#ED1C24" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    <rect x="42" y="64" width="16" height="4" rx="2" fill="#ED1C24"/>
+  </svg>
+</template>
+
+<deck-stage width="1920" height="1080">
+
+  <!-- ========== 第 1 页 · 板块构成与功能 ========== -->
+  <section data-label="板块构成" data-screen-label="01 板块构成">
+    <div class="slide-pad">
+      <div class="pagehead">
+        <div>
+          <div class="kicker">
+            <div class="bar"></div>
+            <div>
+              <div class="t1">律商风险 · UBI 从车风险数据平台</div>
+              <div class="t2">LEXISNEXIS RISK SOLUTIONS · 产品说明 · <a href="platform.html" style="color:inherit;">← 返回数据平台</a></div>
+            </div>
+          </div>
+          <h1>主机厂数据 → <em>可定价的风险</em>，一个平台看全</h1>
+          <div class="sub">面向车险公司与主机厂股东 · 全流程：车端信号接入 → 风险评分 → 费率应用 → 车主运营</div>
+        </div>
+        <div class="pageno">01 / 05<br>板块构成与功能</div>
+      </div>
+
+      <div class="s1-body">
+        <!-- 数据流 -->
+        <div class="card flow">
+          <h3>数据如何变成定价能力</h3>
+          <div class="note">端到端 38–52 秒延迟 · 全链路可解释、可复核</div>
+          <div class="fnode n-oem">
+            <span class="tag">输入</span>
+            <div>
+              <div class="big">主机厂车端原始信号 × 6 类</div>
+              <div class="sm">GPS 轨迹 · 充电会话 · BMS 温度 · IMU 加速度 · 整车 CAN · 故障码</div>
+            </div>
+          </div>
+          <div class="farrow"><svg width="16" height="26" viewBox="0 0 16 26" fill="none" stroke="#909AA6" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M8 1v20M2 16l6 6 6-6"/></svg>清洗对齐 99.2% · 质量校验 98.6%</div>
+          <div class="fnode n-core">
+            <span class="tag">核心</span>
+            <div>
+              <div class="big">可解释指标 → 从车评分 200–997</div>
+              <div class="sm">月均里程 · 快充占比 · 电池温度异常 · 急加速频次 — 每一分都可拆解溯源</div>
+            </div>
+          </div>
+          <div class="farrow"><svg width="16" height="26" viewBox="0 0 16 26" fill="none" stroke="#909AA6" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M8 1v20M2 16l6 6 6-6"/></svg>同一套数据 · 双向输出</div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+            <div class="fnode n-out" style="display:block;">
+              <span class="tag">保险公司</span>
+              <div class="big" style="margin-top:10px;">定价数据集</div>
+              <div class="sm">评分明细 / 定价因子表 / 实时评分 API / 模型卡</div>
+            </div>
+            <div class="fnode n-out2" style="display:block;">
+              <span class="tag">主机厂</span>
+              <div class="big" style="margin-top:10px;">车主运营</div>
+              <div class="sm">驾驶健康分 / 用车周报 / 积分权益 / 保费优惠</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 模块矩阵 -->
+        <div class="mods">
+          <div class="card mod-group">
+            <div class="g-name">经营总览<small>PORTFOLIO</small></div>
+            <div class="mod-items" style="grid-template-columns:1fr;">
+              <div class="mod"><b>承保总览</b><span>全国 128.6 万接入热力地图 + 上海深度评分试点：规模、评分、高风险占比与趋势，一屏尽收</span></div>
+            </div>
+          </div>
+          <div class="card mod-group">
+            <div class="g-name">专项监控<small>MONITORING</small></div>
+            <div class="mod-items" style="grid-template-columns:repeat(2,1fr);">
+              <div class="mod"><b>车队管理</b><span>B 端车队风控驾驶舱：编码筛选 · 花名册 · 风险处置 · 降本测算</span></div>
+              <div class="mod"><b>驾驶人变化监测</b><span>行为漂移检测，转营运 / 换驾驶人早识别，可筛选可处置</span></div>
+              <div class="mod"><b>电池健康</b><span>SOH 诊断 · 热失控前兆预警工单 · 季节性风险迁移</span></div>
+              <div class="mod"><b>智驾风险</b><span>人驾 vs 智驾事件率 · 接管分析 · OTA 风险漂移</span></div>
+            </div>
+          </div>
+          <div class="card mod-group">
+            <div class="g-name">核保分析<small>UNDERWRITING</small></div>
+            <div class="mod-items" style="grid-template-columns:repeat(2,1fr);">
+              <div class="mod"><b>承保车辆</b><span>按品牌 / 风险等级筛选，一键下钻到任意单车</span></div>
+              <div class="mod"><b>车辆详情</b><span>可解释评分拆解 + 拖动指标即时推演「假如」</span></div>
+              <div class="mod"><b>行程与充电</b><span>真实路网轨迹 + 充电行为 + 用途时序识别</span></div>
+              <div class="mod"><b>实时推演</b><span>同一模型下两辆车相对风险对比</span></div>
+            </div>
+          </div>
+          <div class="card mod-group">
+            <div class="g-name">数据→精算定价<small>ACTUARIAL</small></div>
+            <div class="mod-items" style="grid-template-columns:repeat(2,1fr);">
+              <div class="mod"><b>数据接入</b><span>6 类原始信号 → 可解释指标的全透明映射管线</span></div>
+              <div class="mod"><b>定价数据集</b><span>十分位赔付率验证 · GINI/AUC/KS/PSI · 多格式交付</span></div>
+            </div>
+          </div>
+          <div class="card mod-group">
+            <div class="g-name">价值延伸<small>ENGAGE</small></div>
+            <div class="mod-items">
+              <div class="mod"><b>车主互动</b><span>车企品牌 App：健康分、电池月报、权益任务体系</span></div>
+              <div class="mod"><b>车主运营</b><span>活跃·留存·权益经济·转化漏斗的 C 端经营月报</span></div>
+              <div class="mod"><b>移动端</b><span>核保主管与现场查勘的随身风险视图</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="statbar">
+        <div class="stat"><div class="v">128.6<em> 万</em></div><div class="l">全国接入 · 一汽集团 6 大品牌</div></div>
+        <div class="stat"><div class="v">5<em> 万</em></div><div class="l">上海深度评分试点</div></div>
+        <div class="stat"><div class="v">5 <em>大板块</em></div><div class="l">经营 · 专项 · 核保 · 定价 · 延伸</div></div>
+        <div class="stat"><div class="v">200–997</div><div class="l">从车评分区间</div></div>
+        <div class="stat"><div class="v">&lt; 60<em> 秒</em></div><div class="l">信号 → 评分延迟</div></div>
+      </div>
+      <div class="demonote">注：平台当前为<b>演示环境</b>，页面数字为示意口径，正式数字以试点实测为准。</div>
+    </div>
+  </section>
+
+  <!-- ========== 第 2 页 · 车队管理（B 端驾驶舱）========== -->
+  <section data-label="车队管理" data-screen-label="02 车队管理">
+    <div class="slide-pad">
+      <div class="pagehead">
+        <div>
+          <div class="kicker">
+            <div class="bar"></div>
+            <div>
+              <div class="t1">律商风险 · UBI 从车风险数据平台</div>
+              <div class="t2">LEXISNEXIS RISK SOLUTIONS · 产品说明</div>
+            </div>
+          </div>
+          <h1>车队管理：<em>一套数据，车队降本、鑫安做准</em></h1>
+          <div class="sub">B 端车队风控驾驶舱 · 同一套 12 特征，既帮车队看见风险、管理风险、降本，也帮鑫安把承保做准、做大</div>
+        </div>
+        <div class="pageno">02 / 05<br>专项监控 · 车队管理</div>
+      </div>
+
+      <div class="fleet-body">
+        <div class="fleet-shot">
+          <div style="width:100%;height:100%;box-sizing:border-box;background:#eef1f4;padding:22px;display:flex;flex-direction:column;gap:14px;overflow:hidden;text-align:left;">
+            <!-- 车队筛选 -->
+            <div style="display:flex;align-items:center;gap:13px;">
+              <span style="font-size:15px;font-weight:700;color:#56636F;white-space:nowrap;">车队筛选</span>
+              <div style="display:flex;align-items:center;gap:11px;background:#fff;border:1px solid #E4E8EE;border-radius:11px;padding:11px 15px;box-shadow:0 1px 2px rgba(20,30,45,.05);">
+                <span style="width:10px;height:10px;border-radius:50%;background:#ED1C24;"></span>
+                <span style="font-family:'IBM Plex Mono',monospace;font-weight:800;font-size:15px;color:#ED1C24;letter-spacing:.02em;">XA-2024-017</span>
+                <span style="font-size:15px;font-weight:700;color:#16202B;">沪行出行 · 全职网约车队</span>
+                <span style="font-size:13px;font-weight:700;color:#909AA6;">43 辆</span>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#909AA6" stroke-width="2.4"><path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </div>
+            </div>
+            <!-- 车队档案 -->
+            <div style="background:#fff;border:1px solid #E4E8EE;border-radius:14px;padding:15px 18px;display:flex;align-items:center;gap:20px;box-shadow:0 1px 2px rgba(20,30,45,.05);flex-wrap:wrap;">
+              <div style="display:flex;align-items:center;gap:12px;">
+                <span style="width:42px;height:42px;border-radius:11px;background:#FDE9EA;color:#ED1C24;display:flex;align-items:center;justify-content:center;flex:0 0 auto;">
+                  <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17h2l1-5h12l1 5h2M5 12l1.5-5h11L19 12"/><circle cx="7.5" cy="17.5" r="1.5"/><circle cx="16.5" cy="17.5" r="1.5"/></svg>
+                </span>
+                <div>
+                  <div style="display:flex;align-items:center;gap:9px;">
+                    <span style="font-family:'IBM Plex Mono',monospace;font-weight:800;font-size:14px;color:#ED1C24;">XA-2024-017</span>
+                    <span style="font-size:11px;font-weight:800;color:#00AF66;background:#E5F5EE;border-radius:5px;padding:2px 7px;">承保中</span>
+                  </div>
+                  <div style="font-size:16px;font-weight:800;color:#16202B;margin-top:2px;">沪行出行 · 全职网约车队</div>
+                </div>
+              </div>
+              <div style="width:1px;height:40px;background:#E4E8EE;"></div>
+              <div style="display:flex;gap:14px 28px;flex-wrap:wrap;flex:1;">
+                <div><div style="font-size:12px;color:#909AA6;">负责人</div><div style="font-size:14px;font-weight:700;color:#16202B;margin-top:2px;white-space:nowrap;">周建国 · 车队运营总监</div></div>
+                <div><div style="font-size:12px;color:#909AA6;">保单号</div><div style="font-size:14px;font-weight:700;color:#16202B;margin-top:2px;white-space:nowrap;">XA-CI-2024-0417</div></div>
+                <div><div style="font-size:12px;color:#909AA6;">合同期</div><div style="font-size:14px;font-weight:700;color:#16202B;margin-top:2px;white-space:nowrap;">2024.03 – 2025.02</div></div>
+                <div><div style="font-size:12px;color:#909AA6;">运营基地</div><div style="font-size:14px;font-weight:700;color:#16202B;margin-top:2px;white-space:nowrap;">上海 · 浦东</div></div>
+              </div>
+            </div>
+            <!-- KPI -->
+            <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:12px;">
+              <div style="background:#fff;border:1px solid #E4E8EE;border-radius:12px;padding:13px 14px;">
+                <div style="font-size:12.5px;color:#56636F;font-weight:600;">平均从车风险分</div>
+                <div style="display:flex;align-items:baseline;gap:7px;margin-top:5px;"><span style="font-size:28px;font-weight:800;color:#FF8200;">653</span><span style="font-size:10.5px;font-weight:800;color:#fff;background:#FF8200;border-radius:5px;padding:2px 6px;">中高风险</span></div>
+                <div style="font-size:11.5px;color:#909AA6;margin-top:6px;">组合均值 500 · 越高越险</div>
+              </div>
+              <div style="background:#fff;border:1px solid #E4E8EE;border-radius:12px;padding:13px 14px;">
+                <div style="font-size:12.5px;color:#56636F;font-weight:600;">高风险占比</div>
+                <div style="font-size:28px;font-weight:800;color:#16202B;margin-top:5px;">70%</div>
+                <div style="font-size:11.5px;color:#909AA6;margin-top:6px;">30 辆需重点干预</div>
+              </div>
+              <div style="background:#fff;border:1px solid #E4E8EE;border-radius:12px;padding:13px 14px;">
+                <div style="font-size:12.5px;color:#56636F;font-weight:600;">智驾里程占比</div>
+                <div style="font-size:28px;font-weight:800;color:#16202B;margin-top:5px;">10%</div>
+                <div style="font-size:11.5px;color:#909AA6;margin-top:6px;">20 辆 L2+ · 0 辆城市NOA</div>
+              </div>
+              <div style="background:#fff;border:1px solid #E4E8EE;border-radius:12px;padding:13px 14px;">
+                <div style="font-size:12.5px;color:#56636F;font-weight:600;">纯电 SOH 均值</div>
+                <div style="font-size:28px;font-weight:800;color:#00AF66;margin-top:5px;">94.2%</div>
+                <div style="font-size:11.5px;color:#909AA6;margin-top:6px;">11 辆纯电 · 快充 53%</div>
+              </div>
+              <div style="background:#fff;border:1px solid #E4E8EE;border-radius:12px;padding:13px 14px;">
+                <div style="font-size:12.5px;color:#56636F;font-weight:600;">行为漂移预警</div>
+                <div style="display:flex;align-items:baseline;gap:4px;margin-top:5px;"><span style="font-size:28px;font-weight:800;color:#FF8200;">12</span><span style="font-size:12px;color:#909AA6;font-weight:600;">辆</span></div>
+                <div style="font-size:11.5px;color:#909AA6;margin-top:6px;">L2 4 · L1 8</div>
+              </div>
+            </div>
+            <!-- 风险评分榜 -->
+            <div style="background:#fff;border:1px solid #E4E8EE;border-radius:14px;padding:16px 20px;flex:1;box-shadow:0 1px 2px rgba(20,30,45,.05);display:flex;flex-direction:column;">
+              <div style="font-size:17px;font-weight:800;color:#16202B;">车队风险评分榜</div>
+              <div style="font-size:12.5px;color:#909AA6;margin-top:3px;margin-bottom:12px;">按平均从车风险分排序 · 越高越险</div>
+              <div style="display:grid;grid-template-columns:1.4fr .6fr .8fr 2fr .7fr .6fr;gap:0 12px;font-size:12px;font-weight:700;color:#56636F;padding-bottom:9px;border-bottom:1px solid #E4E8EE;">
+                <span>车队</span><span style="text-align:right;">车辆</span><span style="text-align:right;">平均风险分</span><span>风险等级构成</span><span style="text-align:right;">智驾</span><span style="text-align:right;">漂移</span>
+              </div>
+              <div style="display:flex;flex-direction:column;flex:1;justify-content:space-around;">
+                <div style="display:grid;grid-template-columns:1.4fr .6fr .8fr 2fr .7fr .6fr;gap:0 12px;align-items:center;padding:11px 0;border-bottom:1px solid #F0F2F5;">
+                  <span style="display:inline-flex;align-items:center;gap:8px;font-size:14px;font-weight:800;color:#16202B;"><span style="width:9px;height:9px;border-radius:50%;background:#ED1C24;"></span>全职网约</span>
+                  <span style="text-align:right;font-size:13px;color:#56636F;font-weight:600;">43</span>
+                  <span style="text-align:right;font-size:16px;font-weight:800;color:#FF8200;">653</span>
+                  <span style="display:flex;height:9px;border-radius:5px;overflow:hidden;"><i style="flex:8;background:#00AF66;"></i><i style="flex:20;background:#E1A300;"></i><i style="flex:42;background:#FF8200;"></i><i style="flex:30;background:#ED1C24;"></i></span>
+                  <span style="text-align:right;font-size:13px;color:#56636F;">10%</span>
+                  <span style="text-align:right;font-size:13px;font-weight:700;color:#FF8200;">12</span>
+                </div>
+                <div style="display:grid;grid-template-columns:1.4fr .6fr .8fr 2fr .7fr .6fr;gap:0 12px;align-items:center;padding:11px 0;border-bottom:1px solid #F0F2F5;">
+                  <span style="display:inline-flex;align-items:center;gap:8px;font-size:14px;font-weight:700;color:#16202B;"><span style="width:9px;height:9px;border-radius:50%;background:#FF8200;"></span>兼职网约</span>
+                  <span style="text-align:right;font-size:13px;color:#56636F;font-weight:600;">133</span>
+                  <span style="text-align:right;font-size:16px;font-weight:800;color:#E1A300;">580</span>
+                  <span style="display:flex;height:9px;border-radius:5px;overflow:hidden;"><i style="flex:22;background:#00AF66;"></i><i style="flex:30;background:#E1A300;"></i><i style="flex:30;background:#FF8200;"></i><i style="flex:18;background:#ED1C24;"></i></span>
+                  <span style="text-align:right;font-size:13px;color:#56636F;">18%</span>
+                  <span style="text-align:right;font-size:13px;font-weight:700;color:#FF8200;">38</span>
+                </div>
+                <div style="display:grid;grid-template-columns:1.4fr .6fr .8fr 2fr .7fr .6fr;gap:0 12px;align-items:center;padding:11px 0;border-bottom:1px solid #F0F2F5;">
+                  <span style="display:inline-flex;align-items:center;gap:8px;font-size:14px;font-weight:700;color:#16202B;"><span style="width:9px;height:9px;border-radius:50%;background:#2A6FDB;"></span>中长租赁</span>
+                  <span style="text-align:right;font-size:13px;color:#56636F;font-weight:600;">28</span>
+                  <span style="text-align:right;font-size:16px;font-weight:800;color:#E1A300;">489</span>
+                  <span style="display:flex;height:9px;border-radius:5px;overflow:hidden;"><i style="flex:42;background:#00AF66;"></i><i style="flex:33;background:#E1A300;"></i><i style="flex:18;background:#FF8200;"></i><i style="flex:7;background:#ED1C24;"></i></span>
+                  <span style="text-align:right;font-size:13px;color:#56636F;">22%</span>
+                  <span style="text-align:right;font-size:13px;font-weight:700;color:#FF8200;">9</span>
+                </div>
+                <div style="display:grid;grid-template-columns:1.4fr .6fr .8fr 2fr .7fr .6fr;gap:0 12px;align-items:center;padding:11px 0;">
+                  <span style="display:inline-flex;align-items:center;gap:8px;font-size:14px;font-weight:700;color:#16202B;"><span style="width:9px;height:9px;border-radius:50%;background:#00778B;"></span>商务出行</span>
+                  <span style="text-align:right;font-size:13px;color:#56636F;font-weight:600;">38</span>
+                  <span style="text-align:right;font-size:16px;font-weight:800;color:#E1A300;">486</span>
+                  <span style="display:flex;height:9px;border-radius:5px;overflow:hidden;"><i style="flex:45;background:#00AF66;"></i><i style="flex:30;background:#E1A300;"></i><i style="flex:18;background:#FF8200;"></i><i style="flex:7;background:#ED1C24;"></i></span>
+                  <span style="text-align:right;font-size:13px;color:#56636F;">20%</span>
+                  <span style="text-align:right;font-size:13px;font-weight:700;color:#FF8200;">12</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="fleet-side">
+          <div class="fcap">从看见风险 → 处置 → 降本，落在同一份数据上</div>
+          <div class="frow"><span class="fn">01</span><div><b>车队编码筛选</b><span>按 车队编码 / 名称 下拉筛选，快速定位每一支在管车队</span></div></div>
+          <div class="frow"><span class="fn">02</span><div><b>车队档案</b><span>负责人 · 联系方式 · 保单号 · 合同期，一屏可管可查</span></div></div>
+          <div class="frow"><span class="fn">03</span><div><b>风险评分榜</b><span>各车队平均从车风险分、等级构成、智驾与漂移横向对比</span></div></div>
+          <div class="frow"><span class="fn">04</span><div><b>车辆花名册 · 风险处置</b><span>全量车辆可搜索 / 排序，高风险一键派发整改教练</span></div></div>
+          <div class="frow"><span class="fn">05</span><div><b>驾驶行为教练</b><span>急减速 / 疲劳 / 夜间分位诊断，量化出险频度改善</span></div></div>
+          <div class="frow"><span class="fn">06</span><div><b>风险减量 → 降本测算</b><span>行为改善 → 保费系数下行 + 电池 TCO 收益的年度测算</span></div></div>
+        </div>
+      </div>
+      <div class="demonote">截图取自平台演示环境（模拟数据） · 在线访问：<b>platform.html → 专项监控 · 车队管理</b></div>
+    </div>
+  </section>
+
+  <!-- ========== 第 3 页 · 平台界面导览 ========== -->
+  <section data-label="界面导览" data-screen-label="03 界面导览">
+    <div class="slide-pad">
+      <div class="pagehead">
+        <div>
+          <div class="kicker">
+            <div class="bar"></div>
+            <div>
+              <div class="t1">律商风险 · UBI 从车风险数据平台</div>
+              <div class="t2">LEXISNEXIS RISK SOLUTIONS · 产品说明</div>
+            </div>
+          </div>
+          <h1>平台界面导览：<em>风险，第一次被看见</em></h1>
+          <div class="sub">以下均为平台真实界面 · 从经营总览到专项监控，再到核保分析下钻与精算定价交付</div>
+        </div>
+        <div class="pageno">03 / 05<br>平台界面导览</div>
+      </div>
+
+      <div class="tour">
+        <div class="shot tour-hero">
+          <div class="imgwrap"><image-slot id="shot-overview" shape="rect" src="screenshots/ppt/overview.png" placeholder="承保总览 — 拖入平台最新截图"></image-slot></div>
+          <div class="cap"><b><i>承保总览</i> · 经营驾驶舱</b><span>全国 128.6 万接入热力地图 × 上海深度评分试点，规模、评分、高风险占比一屏尽收</span></div>
+        </div>
+        <div class="tour-grid">
+          <div class="shot">
+            <div class="imgwrap"><image-slot id="shot-detail" shape="rect" src="screenshots/ppt/detail.png" placeholder="车辆详情 — 拖入最新截图"></image-slot></div>
+            <div class="cap"><b>车辆详情</b><span>可解释评分拆解 · 拖动推演</span></div>
+          </div>
+          <div class="shot">
+            <div class="imgwrap"><image-slot id="shot-trips" shape="rect" src="screenshots/ppt/trips.png" placeholder="行程与充电 — 拖入最新截图"></image-slot></div>
+            <div class="cap"><b>行程与充电</b><span>真实路网轨迹 · 用途识别</span></div>
+          </div>
+          <div class="shot">
+            <div class="imgwrap"><image-slot id="shot-drivermon" shape="rect" src="screenshots/ppt/drivermon.png" placeholder="驾驶人变化监测 — 拖入最新截图"></image-slot></div>
+            <div class="cap"><b>驾驶人变化监测</b><span>行为漂移 · 换驾驶人识别</span></div>
+          </div>
+          <div class="shot">
+            <div class="imgwrap"><image-slot id="shot-pricing" shape="rect" src="screenshots/ppt/pricing.png" placeholder="定价数据集 — 拖入最新截图"></image-slot></div>
+            <div class="cap"><b>定价数据集</b><span>赔付率验证 · 精算交付</span></div>
+          </div>
+          <div class="shot">
+            <div class="imgwrap"><image-slot id="shot-battery" shape="rect" src="screenshots/ppt/battery.png" placeholder="电池健康 — 拖入最新截图"></image-slot></div>
+            <div class="cap"><b>电池健康</b><span>SOH 诊断 · 热失控预警</span></div>
+          </div>
+          <div class="shot">
+            <div class="imgwrap"><image-slot id="shot-adas" shape="rect" src="screenshots/ppt/adas.png" placeholder="智驾风险 — 拖入最新截图"></image-slot></div>
+            <div class="cap"><b>智驾风险</b><span>人驾 vs 智驾 · OTA 漂移</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="demonote">截图取自平台演示环境（模拟数据） · 在线访问：<b>platform.html</b></div>
+    </div>
+  </section>
+
+  <!-- ========== 第 4 页 · 三方价值 ========== -->
+  <section data-label="三方价值" data-screen-label="04 三方价值">
+    <div class="slide-pad">
+      <div class="pagehead">
+        <div>
+          <div class="kicker">
+            <div class="bar"></div>
+            <div>
+              <div class="t1">律商风险 · UBI 从车风险数据平台</div>
+              <div class="t2">LEXISNEXIS RISK SOLUTIONS · 产品说明</div>
+            </div>
+          </div>
+          <h1>同一套数据，<em>三方都赢</em> — 这就是开放数据的理由</h1>
+          <div class="sub">UBI 从车风险是集团数据战略的突破口：先让股东「看见风险」，再分阶段释放全部数据价值</div>
+        </div>
+        <div class="pageno">04 / 05<br>平台价值</div>
+      </div>
+
+      <div class="s2-cols">
+        <div class="card vcol">
+          <div class="who"><span class="dot" style="background:var(--red);"></span><b>对保险公司</b></div>
+          <div class="for">承保更准 · 业务更大 · 赔付更优</div>
+          <div class="vhero" style="background:var(--red-soft);">
+            <span class="n" style="color:var(--red);">3.9×</span>
+            <span class="d">最高 / 最低风险十分位<br>赔付率差异（模拟测算）</span>
+          </div>
+          <div class="vrow"><span class="vmark" style="background:var(--red);"></span><div><b>从车定价能力</b><span>评分直接入费率：GINI 0.41 · AUC 0.71 · 8 周 PSI 0.06 稳定</span></div></div>
+          <div class="vrow"><span class="vmark" style="background:var(--red);"></span><div><b>事中风险管理</b><span>高风险车辆实时预警，续保复核与系数调整有据可依</span></div></div>
+          <div class="vrow"><span class="vmark" style="background:var(--red);"></span><div><b>识别真实用途</b><span>时序识别网约营运状态，杜绝标签错配带来的逆选择</span></div></div>
+        </div>
+
+        <div class="card vcol">
+          <div class="who"><span class="dot" style="background:var(--teal);"></span><b>对主机厂股东</b></div>
+          <div class="for">体验更好 · 生态更厚 · 研发反哺</div>
+          <div class="vhero" style="background:#E2F0F3;">
+            <span class="n" style="color:var(--teal);">+23%</span>
+            <span class="d">车主端月活提升<br>（行业同类案例量级）</span>
+          </div>
+          <div class="vrow"><span class="vmark" style="background:var(--teal);"></span><div><b>车主体验闭环</b><span>驾驶健康分、用车周报、电池养护建议进入品牌 App</span></div></div>
+          <div class="vrow"><span class="vmark" style="background:var(--teal);"></span><div><b>生态增值收入</b><span>保险 + 充电 + 保养 + 会员打通，沉淀私域运营抓手</span></div></div>
+          <div class="vrow"><span class="vmark" style="background:var(--teal);"></span><div><b>数据反哺研发</b><span>真实用车行为回流，优化三电标定与下一代车型定义</span></div></div>
+        </div>
+
+        <div class="card vcol">
+          <div class="who"><span class="dot" style="background:var(--green);"></span><b>对车主</b></div>
+          <div class="for">更安全 · 更省钱 · 更懂车</div>
+          <div class="vhero" style="background:#E5F5EE;">
+            <span class="n" style="color:var(--green);">−5~8%</span>
+            <span class="d">安全驾驶车主<br>续保保费优惠区间（设计值）</span>
+          </div>
+          <div class="vrow"><span class="vmark" style="background:var(--green);"></span><div><b>保费随行为</b><span>开得好就交得少，优惠进度在 App 内透明可见</span></div></div>
+          <div class="vrow"><span class="vmark" style="background:var(--green);"></span><div><b>教练式建议</b><span>快充、急加速、电池温度的个性化养护提醒</span></div></div>
+          <div class="vrow"><span class="vmark" style="background:var(--green);"></span><div><b>积分与权益</b><span>安全里程兑换保养券、充电折扣、续保优惠</span></div></div>
+        </div>
+      </div>
+      <div class="demonote">注：本页数字为<b>示意 / 模拟测算</b>，以试点实测为准。</div>
+    </div>
+  </section>
+
+  <!-- ========== 第 5 页 · 落地路径 ========== -->
+  <section data-label="落地路径" data-screen-label="05 落地路径">
+    <div class="slide-pad">
+      <div class="pagehead">
+        <div>
+          <div class="kicker">
+            <div class="bar"></div>
+            <div>
+              <div class="t1">律商风险 · UBI 从车风险数据平台</div>
+              <div class="t2">LEXISNEXIS RISK SOLUTIONS · 产品说明</div>
+            </div>
+          </div>
+          <h1>三步走：<em>从试点到数据战略全景</em></h1>
+          <div class="sub">每一步都以保险侧「可验证的业务结果」为里程碑 — 时间为建议区间（P0 0–6 · P1 6–24 · P2 12–36 · P3 24–48 个月），阶段允许交叠并行</div>
+        </div>
+        <div class="pageno">05 / 05<br>落地路径</div>
+      </div>
+
+      <div class="s4-body">
+        <div class="s4-path">
+          <div class="step4">
+            <div class="no">第一步 · 试点验证</div>
+            <b>小规模接入，先看见风险</b>
+            <ul>
+              <li>上海试点 <b>248 辆</b>起步，行车 + 充电两个数据域</li>
+              <li>从车评分跑通端到端：信号 → 评分 → 报表</li>
+              <li>与历史赔案回测，验证<b>赔付率区分度</b>（目标 3×+）</li>
+            </ul>
+            <div class="goal">里程碑：风险区分度回测报告</div>
+            <span class="when">P0–P1 · 0–12 个月（建议）</span>
+          </div>
+          <div class="step4">
+            <div class="no">第二步 · 规模接入 + 费率应用</div>
+            <b>评分进入定价与核保</b>
+            <ul>
+              <li>扩大至<b>万辆级</b>接入，覆盖主力新能源车型</li>
+              <li>评分进入<b>续保定价</b>与核保流程试运行</li>
+              <li>车主健康分进入品牌 App，正向引导驾驶行为</li>
+            </ul>
+            <div class="goal">里程碑：评分入费率试运行</div>
+            <span class="when">P1 · 12–24 个月（建议）</span>
+          </div>
+          <div class="step4">
+            <div class="no">第三步 · 数据战略全景</div>
+            <b>从看见风险到定义产品</b>
+            <ul>
+              <li>理赔智能化：图像定损 · 碰撞还原 · 维修线索</li>
+              <li><b>智驾风险评价模型</b>嵌入主机厂智驾服务体系</li>
+              <li>生态运营：续保倾向 · 用户分层 · 座舱体验</li>
+            </ul>
+            <div class="goal">里程碑：智驾保险产品申报</div>
+            <span class="when">P2–P3 · 12–48 个月（建议）</span>
+          </div>
+        </div>
+
+        <div class="s4-strip">
+          <div class="card gov">
+            <div class="gt">合规底座<small>贯穿全程 · 先行启动</small></div>
+            <ul>
+              <li><b>分级授权</b> · 车主知情同意，按场景最小化取数</li>
+              <li><b>数据不出域</b> · 模型进主机厂域内计算，结果出域</li>
+              <li><b>隐私脱敏</b> · VIN / 轨迹去标识化，聚合优先</li>
+              <li><b>审计留痕</b> · 取数用数全程可审计、可追溯</li>
+            </ul>
+          </div>
+          <a class="card nextdoc" href="strategy-map.html">
+            <span class="nk">延伸阅读 →</span>
+            <b>数据战略地图</b>
+            <span>六大数据域 × 四条价值链的全景规划，含集团汇报一页总图</span>
+          </a>
+          <a class="card nextdoc" href="ad-risk-training.html">
+            <span class="nk">延伸阅读 →</span>
+            <b>智驾风险模型训练体系</b>
+            <span>准 L3+ 专题：训练体系是什么、怎么建、嵌入智驾服务体系哪里</span>
+          </a>
+        </div>
+      </div>
+      <div class="demonote">注：时间与里程碑为<b>建议规划</b>，以双方商务与合规评审为准。</div>
+    </div>
+  </section>
+
+</deck-stage>
+
+<script src="image-slot.js"></script>
+<script src="telematics/deck-stage.js"></script>
+</body>
+</html>
